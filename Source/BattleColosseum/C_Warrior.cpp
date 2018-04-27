@@ -12,7 +12,7 @@ AC_Warrior::AC_Warrior()
 
 	// 변수 초기화
 	IsSprinting = false;
-	SprintRate = 2.f;
+	SprintRate = 100.f;
 	RightView = false;
 	SexMan = true;
 
