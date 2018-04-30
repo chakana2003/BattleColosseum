@@ -53,12 +53,16 @@ void AC_Door::DoorClose()
 
 void AC_Door::BoxTrigBeginOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	DoorOpen();
+	if (Cast<AC_Warrior>(OtherActor)) {		// 캐릭터가 닿았을때만
+		DoorOpen();
+	}
 }
 
 void AC_Door::BoxTrigEndOverlap(UPrimitiveComponent * OverlappedComponent, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex)
 {
-	DoorClose();
+	if (Cast<AC_Warrior>(OtherActor)) {		// 캐릭터가 닿았을때만
+		DoorClose();
+	}
 }
 
 // Called every frame

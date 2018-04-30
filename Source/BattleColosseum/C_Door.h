@@ -6,6 +6,7 @@
 #include "Classes/Components/BoxComponent.h"
 #include "Classes/Components/StaticMeshComponent.h"
 #include "Public/Math/UnrealMathUtility.h"
+#include "C_Warrior.h"
 #include "ConstructorHelpers.h"
 #include "GameFramework/Actor.h"
 #include "C_Door.generated.h"
@@ -40,9 +41,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void DoorClose();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable)		// 정해진 Param값의 갯수와 형식을 받아야 함.
 	void BoxTrigBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable)		// 마찬가지~
 	void BoxTrigEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 public:	
