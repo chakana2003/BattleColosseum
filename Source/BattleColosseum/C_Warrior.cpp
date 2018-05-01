@@ -28,8 +28,14 @@ AC_Warrior::AC_Warrior()
 	this->bUseControllerRotationPitch = false;				// 플레이어가 위아래로 돌아가지 않도록
 	springArm->bUsePawnControlRotation = true;				// 컨트롤러의 회전값을 사용하도록
 	springArm->bInheritPitch = true;						// 카메라만 위아래로 돌아가도록
-	springArm->SocketOffset = FVector(0.f, 50.f, 80.f);		// 오른쪽 어깨위로 설정
-	springArm->TargetArmLength = 100.f;						// 카메라 거리 가깝게 설정
+	springArm->SocketOffset = FVector(0.f, 50.f, 70.f);		// 오른쪽 어깨위로 설정
+	springArm->TargetArmLength = 150.f;						// 카메라 거리 가깝게 설정
+	springArm->bEnableCameraLag = true;
+	springArm->bEnableCameraRotationLag = true;
+	springArm->CameraLagSpeed = 9.0f;
+	springArm->CameraRotationLagSpeed = 9.0f;
+
+	GetCapsuleComponent()->SetNotifyRigidBodyCollision(true);  // hit 이벤트 활성화(옛날이름)
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SM_Man(TEXT("/Game/Meshes/Characters/Male/ColoM.ColoM"));
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> SM_Woman(TEXT("/Game/Meshes/Characters/Female/ColoW.ColoW"));
@@ -106,11 +112,11 @@ void AC_Warrior::SwitchView()
 {
 	if (RightView) {
 		RightView = false;
-		springArm->SocketOffset = FVector(0.f, -50.f, 80.f);
+		springArm->SocketOffset = FVector(0.f, -50.f, 70.f);
 	}
 	else {
 		RightView = true;
-		springArm->SocketOffset = FVector(0.f, 50.f, 80.f);
+		springArm->SocketOffset = FVector(0.f, 50.f, 70.f);
 	}
 }
 

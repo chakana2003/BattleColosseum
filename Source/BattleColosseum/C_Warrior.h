@@ -9,6 +9,7 @@
 #include "Classes/Components/SkeletalMeshComponent.h"
 #include "Classes/Components/InputComponent.h"
 #include "Classes/GameFramework/CharacterMovementComponent.h"
+#include "Classes/Components/CapsuleComponent.h"
 #include "ConstructorHelpers.h"
 #include "C_Warrior.generated.h"
 
