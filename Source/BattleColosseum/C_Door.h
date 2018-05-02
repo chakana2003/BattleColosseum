@@ -6,6 +6,7 @@
 #include "Classes/Components/BoxComponent.h"
 #include "Classes/Components/StaticMeshComponent.h"
 #include "Public/Math/UnrealMathUtility.h"
+#include "Public/Misc/App.h"
 #include "C_Warrior.h"
 #include "ConstructorHelpers.h"
 #include "GameFramework/Actor.h"
@@ -30,6 +31,8 @@ protected:
 	// º¯¼öµé.
 	float Speed;
 	bool IsOpen;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	float OpeningRate;
 
 protected:
 	// Called when the game starts or when spawned

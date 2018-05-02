@@ -10,8 +10,9 @@ AC_Door::AC_Door()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// 변수 초기화
-	Speed = 0.f;
+	Speed = 2.f;
 	IsOpen = false;
+	OpeningRate = 5.f;
 	ConstructorHelpers::FObjectFinder<UStaticMesh> DoorMesh(TEXT("StaticMesh'/Game/Meshes/Archtects/SM_Door.SM_Door'"));
 
 	// 컴포넌트 생성
@@ -73,11 +74,11 @@ void AC_Door::Tick(float DeltaTime)
 	if (Speed < 1.f) {
 		if (IsOpen) {
 			StaticDoor->SetRelativeRotation(FRotator(0.f, FMath::Lerp(0.f, 90.f, Speed),0.f));
-			Speed += 0.01f;
+			Speed += (OpeningRate*FApp::GetDeltaTime());
 		}
 		else {
 			StaticDoor->SetRelativeRotation(FRotator(0.f, FMath::Lerp(90.f, 0.f, Speed),0.f));
-			Speed += 0.01f;
+			Speed += (OpeningRate*FApp::GetDeltaTime());
 		}
 	}
 }
