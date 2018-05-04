@@ -81,5 +81,13 @@ void AC_Door::Tick(float DeltaTime)
 			Speed += (OpeningRate*FApp::GetDeltaTime());
 		}
 	}
+	else {
+		if (IsOpen) {
+			StaticDoor->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
+		}
+		else {
+			StaticDoor->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
+		}
+	}
 }
 
