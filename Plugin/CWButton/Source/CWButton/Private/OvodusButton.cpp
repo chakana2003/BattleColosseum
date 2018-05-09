@@ -1,9 +1,5 @@
-/*
-* Made by Ovodus (Dmitry Petrushin). ovodus@yandex.ru
-*/
-
 #include "OvodusButton.h"
-#include "BattleColosseum.h"
+#include "CWButton.h"
 
 #pragma region >>> SOvodusButton <<<
 FReply SOvodusButton::OnMouseMove(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) {
@@ -16,7 +12,7 @@ FReply SOvodusButton::OnMouseMove(const FGeometry& MyGeometry, const FPointerEve
 	int ImageWidth = AdvancedHitTexture->PlatformData->SizeX;
 	LocalPosition.X *= ImageWidth;
 	LocalPosition.Y *= AdvancedHitTexture->PlatformData->SizeY;
-	int BufferPosition = (LocalPosition.Y * ImageWidth) + LocalPosition.X;
+	int BufferPosition = (floor(LocalPosition.Y) * ImageWidth) + LocalPosition.X;
 	FColor* ImageData = static_cast<FColor*>((AdvancedHitTexture->PlatformData->Mips[0]).BulkData.Lock(LOCK_READ_ONLY));
 	if (!ImageData) { WhatToReturn = false; }
 	else { if (ImageData[BufferPosition].A <= AdvancedHitAlpha) WhatToReturn = false; }
