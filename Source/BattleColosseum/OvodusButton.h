@@ -3,6 +3,11 @@
 */
 #pragma once
 
+#include "CoreMinimal.h"
+#include "Components/ButtonSlot.h"
+#include "Components/ContentWidget.h"
+#include "Engine/Texture2D.h"
+#include "Widgets/Input/SButton.h"
 #include "Components/Button.h"
 #include "OvodusButton.generated.h"
 /**
@@ -51,7 +56,8 @@ public:
  * Use SetAdvancedHitAlpha to set an integer in range 0-255. If pixel's alpha is lower than this value, it will be treated as an empty space.
  */
 UCLASS()
-class BATTLECOLOSSEUM_API UOvodusButton : public UButton { GENERATED_BODY()
+class BATTLECOLOSSEUM_API UOvodusButton : public UButton { 
+	GENERATED_BODY()
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AdvancedHitTest") UTexture2D* AdvancedHitTexture;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AdvancedHitTest", meta = (ClampMin = "0.0", ClampMax = "255.0", UIMin = "0.0", UIMax = "255.0")) int AdvancedHitAlpha;

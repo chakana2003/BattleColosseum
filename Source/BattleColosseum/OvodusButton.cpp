@@ -2,8 +2,8 @@
 * Made by Ovodus (Dmitry Petrushin). ovodus@yandex.ru
 */
 
-#include "BattleColosseum.h"
 #include "OvodusButton.h"
+#include "BattleColosseum.h"
 
 #pragma region >>> SOvodusButton <<<
 FReply SOvodusButton::OnMouseMove(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) {
