@@ -1,14 +1,21 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "C_Warrior.h"
-
-
+#include "UnrealNetwork.h"
+#include "Classes/GameFramework/SpringArmComponent.h"
+#include "Classes/Camera/CameraComponent.h"
+#include "Classes/Components/SkeletalMeshComponent.h"
+#include "Classes/Components/InputComponent.h"
+#include "Classes/GameFramework/CharacterMovementComponent.h"
+#include "Classes/Components/CapsuleComponent.h"
+#include "ConstructorHelpers.h"
 
 // Sets default values
 AC_Warrior::AC_Warrior()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
 
 	// 변수 초기화
 	IsSprinting = false;
@@ -44,6 +51,15 @@ AC_Warrior::AC_Warrior()
 	WomanMesh = SM_Woman.Object;
 }
 
+void AC_Warrior::GetLifetimeReplicatedProps(TArray<FLifetimeProperty> & OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// Replicate to everyone
+	DOREPLIFETIME(AC_Warrior, IsSprinting);
+
+}
+
 // Called when the game starts or when spawned
 void AC_Warrior::BeginPlay()
 {
@@ -63,46 +79,32 @@ void AC_Warrior::BeginPlay()
 void AC_Warrior::MoveForward(float Value)
 {
 	if (Value != 0.f) {
-		if (IsSprinting) {
-			// 캐릭터 무브먼트 컴포넌트의 Max Speed 값을 Sprint_Speed로 바꿈
-			GetCharacterMovement()->MaxWalkSpeed = Sprint_Speed;
-
-			AddMovementInput(GetActorForwardVector(), Value);
-		}
-		else {
-			// 캐릭터 무브먼트 컴포넌트의 Max Speed 값을 Ori_Speed로 바꿈
-			GetCharacterMovement()->MaxWalkSpeed = Ori_Speed;
-
-			AddMovementInput(GetActorForwardVector(), Value);
-		}
+		AddMovementInput(GetActorForwardVector(), Value);
 	}
 }
 
 void AC_Warrior::MoveRight(float Value)
 {
 	if (Value != 0.f) {
-		if (IsSprinting) {
-			// 캐릭터 무브먼트 컴포넌트의 Max Speed 값을 Sprint_Speed로 바꿈
-			GetCharacterMovement()->MaxWalkSpeed = Sprint_Speed;
-
 			AddMovementInput(GetActorRightVector(), Value);
-		}
-		else {
-			// 캐릭터 무브먼트 컴포넌트의 Max Speed 값을 Ori_Speed로 바꿈
-			GetCharacterMovement()->MaxWalkSpeed = Ori_Speed;
-
-			AddMovementInput(GetActorRightVector(), Value);
-		}
 	}
 }
 
-void AC_Warrior::ActiveSprint()
+bool AC_Warrior::ActiveSprint_Validate() {
+	return true;
+}
+
+void AC_Warrior::ActiveSprint_Implementation()
 {
 	if (!IsSprinting)
 		IsSprinting = true;
 }
 
-void AC_Warrior::DeActiveSprint()
+bool AC_Warrior::DeActiveSprint_Validate() {
+	return true;
+}
+
+void AC_Warrior::DeActiveSprint_Implementation()
 {
 	if (IsSprinting)
 		IsSprinting = false;
@@ -124,7 +126,14 @@ void AC_Warrior::SwitchView()
 void AC_Warrior::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (IsSprinting) {
+		// 캐릭터 무브먼트 컴포넌트의 Max Speed 값을 Sprint_Speed로 바꿈
+		GetCharacterMovement()->MaxWalkSpeed = Sprint_Speed;
+	}
+	else {
+		// 캐릭터 무브먼트 컴포넌트의 Max Speed 값을 Ori_Speed로 바꿈
+		GetCharacterMovement()->MaxWalkSpeed = Ori_Speed;
+	}
 }
 
 // Called to bind functionality to input

@@ -2,15 +2,8 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "Core.h"
 #include "GameFramework/Character.h"
-#include "Classes/GameFramework/SpringArmComponent.h"
-#include "Classes/Camera/CameraComponent.h"
-#include "Classes/Components/SkeletalMeshComponent.h"
-#include "Classes/Components/InputComponent.h"
-#include "Classes/GameFramework/CharacterMovementComponent.h"
-#include "Classes/Components/CapsuleComponent.h"
-#include "ConstructorHelpers.h"
 #include "C_Warrior.generated.h"
 
 
@@ -33,7 +26,7 @@ protected:
 	// 변수들.
 
 	// RunningState, 뛰기 불리언.
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Code")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Code", Replicated)
 	bool IsSprinting;		
 	//  Run Rate, 뛰기 비율.
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Code")
@@ -59,10 +52,15 @@ protected:
 
 	// 함수들
 	// 입력 관련 행동 함수
+	UFUNCTION(BlueprintCallable)
 	void MoveForward(float Value);						// 앞으로 가기
+	UFUNCTION(BlueprintCallable)
 	void MoveRight(float Value);						// 옆으로 가기
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
 	void ActiveSprint();								// 뛰기 활성화
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
 	void DeActiveSprint();								// 뛰기 비활성화
+	UFUNCTION()
 	void SwitchView();
 
 public:	
@@ -72,6 +70,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	
+	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	
 };
