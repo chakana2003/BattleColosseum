@@ -2,5 +2,16 @@
 	"FileVersion": 3,
 	"EngineAssociation": "4.19",
 	"Category": "",
-	"Description": ""
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "BattleColosseum",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine",
+				"UMG"
+			]
+		}
+	]
 }
