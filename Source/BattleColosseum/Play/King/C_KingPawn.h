@@ -38,6 +38,13 @@ public:
 		void MoveRight(float Value);
 	UFUNCTION()
 		void ZoomIn(float Value);
+	UFUNCTION()
+		void SpeedMoveMode();
+	UFUNCTION()
+		void ReturnSpeedMoveMode();
+
+
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USceneComponent* Scene;
@@ -46,7 +53,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* CastArrow;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UFloatingPawnMovement* Floating;
+	class UFloatingPawnMovement* FloatingMovement;
 
-	FRotator rot;
+	FVector ZoomVector;
+	float FlySpeed;
 };

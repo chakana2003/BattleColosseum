@@ -18,11 +18,10 @@ AC_KingPawn::AC_KingPawn()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Cam"));
 	Camera->SetupAttachment(Scene);
 	CastArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("CastArrow"));
-
+	FloatingMovement= CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingMovement"));
 	CastArrow->SetupAttachment(Camera);
 	
 	// 생성자에서는 Controller 가 없기 때문에 NULL 을 반환해서 크러쉬 발생 - 에디터 강제종료
-	//rot=FRotator(0, Controller->GetControlRotation().Yaw, 0);
 
 	// 도수코드로 할 행동을 작성 요망
 
@@ -64,6 +63,8 @@ void AC_KingPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis(TEXT("K_MoveRight"), this, &AC_KingPawn::MoveRight);
 	PlayerInputComponent->BindAxis(TEXT("K_LookUp"), this, &AC_KingPawn::Lookup);
 	PlayerInputComponent->BindAxis(TEXT("K_ZoomIn"), this, &AC_KingPawn::ZoomIn);
+	PlayerInputComponent->BindAction(TEXT("K_KingSpeedMode"), IE_Pressed, this, &AC_KingPawn::SpeedMoveMode);
+	PlayerInputComponent->BindAction(TEXT("K_KingSpeedMode"), IE_Released, this, &AC_KingPawn::ReturnSpeedMoveMode);
 }
 
 void AC_KingPawn::Turn(float Value)
@@ -73,12 +74,13 @@ void AC_KingPawn::Turn(float Value)
 
 void AC_KingPawn::Lookup(float Value)
 {
+
 	AddControllerPitchInput(Value);
 }
 
 void AC_KingPawn::MoveForward(float Value)
 {
-	AddMovementInput(GetActorForwardVector(), Value);
+	AddMovementInput(FVector(GetActorForwardVector().X, GetActorForwardVector().Y,0), Value);
 
 }
 
@@ -88,5 +90,18 @@ void AC_KingPawn::MoveRight(float Value)
 }
 void AC_KingPawn::ZoomIn(float Value)
 {
-	
+	ZoomVector = (FVector(GetActorForwardVector().X, GetActorForwardVector().Y, -0.5)*Value * 50);
+	AddActorWorldOffset(ZoomVector);
+
+}
+
+void AC_KingPawn::SpeedMoveMode()
+{
+	FloatingMovement->MaxSpeed = FloatingMovement->MaxSpeed * 2;
+
+}
+
+void AC_KingPawn::ReturnSpeedMoveMode()
+{
+	FloatingMovement->MaxSpeed = FloatingMovement->MaxSpeed / 2;
 }
