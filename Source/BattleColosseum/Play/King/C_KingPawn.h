@@ -39,11 +39,14 @@ public:
 	UFUNCTION()
 		void ZoomIn(float Value);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		class USceneComponent* Scene;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		class UCameraComponent* Camera;
-//	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-		//class UArrowComponent* CastArrow;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* Scene;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCameraComponent* Camera;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UArrowComponent* CastArrow;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UFloatingPawnMovement* Floating;
+
+	FRotator rot;
 };

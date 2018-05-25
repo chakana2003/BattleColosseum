@@ -5,7 +5,9 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
+#include "Components/ArrowComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "GameFramework/FloatingPawnMovement.h"
 
 // Sets default values
 AC_KingPawn::AC_KingPawn()
@@ -15,13 +17,27 @@ AC_KingPawn::AC_KingPawn()
 	Scene= CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Cam"));
 	Camera->SetupAttachment(Scene);
-	//CastArrow= CreateDefaultSubobject<UArrowComponent>(TEXT("CastArrow"));
+	CastArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("CastArrow"));
 
-	//CastArrow->SetupAttachment(Camera);
+	CastArrow->SetupAttachment(Camera);
 	
+	// 생성자에서는 Controller 가 없기 때문에 NULL 을 반환해서 크러쉬 발생 - 에디터 강제종료
 	//rot=FRotator(0, Controller->GetControlRotation().Yaw, 0);
+
+	// 도수코드로 할 행동을 작성 요망
+
+	// 예를들어
+
+	// Arrow 컴포넌트를 카메라에 부착
+
+	// Arrow 컴포넌트를 Yaw 로 90도 회전
+
+	// Camera 를 root 로 설정
+
+	// BoxCollision 의 Extend 를 30,50,10 으로 설정
+
+	// 과 같이 도수코드로 작성해놓으면 내가 설정해줄께 설정하는거 한번 보면 감 올꺼야
 	
-	//GetActorForwardVector();
 }
 
 // Called when the game starts or when spawned
@@ -62,7 +78,7 @@ void AC_KingPawn::Lookup(float Value)
 
 void AC_KingPawn::MoveForward(float Value)
 {
-//	AddMovementInput(ForwordDirection, Value);
+	AddMovementInput(GetActorForwardVector(), Value);
 
 }
 
