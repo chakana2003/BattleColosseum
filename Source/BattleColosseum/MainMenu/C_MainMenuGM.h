@@ -14,7 +14,8 @@ class BATTLECOLOSSEUM_API AC_MainMenuGM : public AGameModeBase
 {
 	GENERATED_BODY()
 	
-	
+public:
+	AC_MainMenuGM();
 	
 	
 };
