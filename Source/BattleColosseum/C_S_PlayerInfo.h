@@ -3,18 +3,33 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "C_S_PlayerInfo.generated.h"
 
-/**
- * 
- */
-UCLASS()
-class BATTLECOLOSSEUM_API UC_S_PlayerInfo : public UObject
-{
-	GENERATED_BODY()
-	
-	
-	
-	
+USTRUCT(BlueprintType)
+struct FC_S_Characters {
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY()
+	class ACharacter* Character;
+
+	UPROPERTY()
+	class UTexture2D* Sumnail;
+};
+
+
+USTRUCT(BlueprintType)
+struct FC_S_PlayerInfo {
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY()
+	FText Name;
+
+	UPROPERTY()
+	class UTexture2D* Icon;
+
+	UPROPERTY()
+	FText status;
+
+	UPROPERTY()
+	FC_S_Characters SelectCharacter;
 };
