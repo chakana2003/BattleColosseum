@@ -13,8 +13,11 @@ UCLASS()
 class BATTLECOLOSSEUM_API AC_MainMenuLevelScript : public ALevelScriptActor
 {
 	GENERATED_BODY()
+
+public:
+	AC_MainMenuLevelScript();
+
+	virtual void BeginPlay() override;
 	
-	
-	
-	
+	class UC_BCGI* BCGameInstance;
 };
