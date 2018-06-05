@@ -18,16 +18,7 @@ public:		// 변수
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FString SAVEGAME;
-	class UC_MainMenuWidget* MainMenuWidget;
-	class UC_CreatePlayerWidget* CreatePlayerWidget;
 
 public:		// 함수
 	UC_BCGI();
-	UFUNCTION(BlueprintCallable)
-	void SaveGameCheck();
-	UFUNCTION(BlueprintCallable)
-	void ShowMainMenu();
-	UFUNCTION(BlueprintCallable)
-	void ShowCreateMenu();
-	
 };

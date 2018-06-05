@@ -13,8 +13,9 @@ UCLASS()
 class BATTLECOLOSSEUM_API UC_CreatePlayerWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
-	
+
+public:
+	virtual void NativeConstruct() override;
 	
 	
 };

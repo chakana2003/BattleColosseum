@@ -17,13 +17,8 @@ class BATTLECOLOSSEUM_API UC_MainMenuWidget : public UUserWidget
 public:
 	// 변수들
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FText Status;										// 상태 TEXT
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FText RoomCount;									// Room 갯수 TEXT
-
 public:
 
-	
-	
+	virtual void NativeConstruct() override;
+
 };

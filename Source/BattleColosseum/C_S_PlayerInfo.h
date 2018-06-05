@@ -9,10 +9,10 @@ USTRUCT(BlueprintType)
 struct FC_S_Characters {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class ACharacter* Character;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UTexture2D* Sumnail;
 };
 
@@ -21,15 +21,15 @@ USTRUCT(BlueprintType)
 struct FC_S_PlayerInfo {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText Name;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UTexture2D* Icon;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText status;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FC_S_Characters SelectCharacter;
 };

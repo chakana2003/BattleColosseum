@@ -17,5 +17,8 @@ class BATTLECOLOSSEUM_API AC_MainMenuGM : public AGameModeBase
 public:
 	AC_MainMenuGM();
 	
+public: // 변수
 	
+
+public: // 함수
 };

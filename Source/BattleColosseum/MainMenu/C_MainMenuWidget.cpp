@@ -2,6 +2,7 @@
 
 #include "C_MainMenuWidget.h"
 
-
-
-
+void UC_MainMenuWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}

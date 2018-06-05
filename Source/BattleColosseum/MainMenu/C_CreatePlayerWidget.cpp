@@ -4,4 +4,6 @@
 
 
 
-
+void UC_CreatePlayerWidget::NativeConstruct() {
+	Super::NativeConstruct();
+}

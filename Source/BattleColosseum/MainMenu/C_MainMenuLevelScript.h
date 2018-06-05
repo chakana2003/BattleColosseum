@@ -17,7 +17,7 @@ class BATTLECOLOSSEUM_API AC_MainMenuLevelScript : public ALevelScriptActor
 public:
 	AC_MainMenuLevelScript();
 
-	virtual void BeginPlay() override;
-	
-	class UC_BCGI* BCGameInstance;
+public: // 변수
+
+public: // 함수
 };

@@ -13,8 +13,9 @@ UCLASS()
 class BATTLECOLOSSEUM_API AC_MainMenuPC : public APlayerController
 {
 	GENERATED_BODY()
+
+public:
 	
-	
-	
+public:
 	
 };
