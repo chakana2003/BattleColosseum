@@ -18,11 +18,10 @@ class BATTLECOLOSSEUM_API UC_SaveGame : public USaveGame
 public:
 	UC_SaveGame();
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FString SaveGameName;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FC_S_PlayerInfo MyInfo;
-	
 	
 };
