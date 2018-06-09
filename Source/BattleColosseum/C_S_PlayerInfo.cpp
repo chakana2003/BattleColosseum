@@ -2,7 +2,6 @@
 
 #include "C_S_PlayerInfo.h"
 
-
 FC_S_Characters::FC_S_Characters()
 {
 	Character = nullptr;

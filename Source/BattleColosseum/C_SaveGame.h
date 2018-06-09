@@ -21,7 +21,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FString SaveGameName;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	FC_S_PlayerInfo MyInfo;
 	
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 };
