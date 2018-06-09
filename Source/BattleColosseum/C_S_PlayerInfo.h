@@ -9,6 +9,8 @@ USTRUCT(BlueprintType)
 struct FC_S_Characters {
 	GENERATED_USTRUCT_BODY()
 
+	FC_S_Characters();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class ACharacter* Character;
 
@@ -20,6 +22,8 @@ struct FC_S_Characters {
 USTRUCT(BlueprintType)
 struct FC_S_PlayerInfo {
 	GENERATED_USTRUCT_BODY()
+
+	FC_S_PlayerInfo();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText Name;
