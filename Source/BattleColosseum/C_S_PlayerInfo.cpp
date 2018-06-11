@@ -14,5 +14,4 @@ FC_S_PlayerInfo::FC_S_PlayerInfo()
 	Name = FText::FromString(TEXT("None"));
 	Icon = nullptr;
 	status = FText::FromString(TEXT("None"));
-	SelectCharacter = FC_S_Characters();
 }
