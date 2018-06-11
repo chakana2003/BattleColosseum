@@ -63,6 +63,10 @@ protected:
 	UFUNCTION()
 	void SwitchView();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "TEST")
+	void BlueprintEventTest();
+	void BlueprintEventTest_Implementation();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

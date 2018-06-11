@@ -122,6 +122,10 @@ void AC_Warrior::SwitchView()
 	}
 }
 
+void AC_Warrior::BlueprintEventTest_Implementation()
+{
+}
+
 // Called every frame
 void AC_Warrior::Tick(float DeltaTime)
 {
