@@ -13,10 +13,8 @@
 AC_KingPawn::AC_KingPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	Camera->SetupAttachment(RootComponent);
 	PrimaryActorTick.bCanEverTick = true;
-	Scene= CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
-	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Cam"));
-	Camera->SetupAttachment(Scene);
 	CastArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("CastArrow"));
 	FloatingMovement= CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingMovement"));
 	CastArrow->SetupAttachment(Camera);
@@ -81,7 +79,6 @@ void AC_KingPawn::Lookup(float Value)
 void AC_KingPawn::MoveForward(float Value)
 {
 	AddMovementInput(FVector(GetActorForwardVector().X, GetActorForwardVector().Y,0), Value);
-
 }
 
 void AC_KingPawn::MoveRight(float Value)
@@ -92,13 +89,11 @@ void AC_KingPawn::ZoomIn(float Value)
 {
 	ZoomVector = (FVector(GetActorForwardVector().X, GetActorForwardVector().Y, -0.5)*Value * 50);
 	AddActorWorldOffset(ZoomVector);
-
 }
 
 void AC_KingPawn::SpeedMoveMode()
 {
 	FloatingMovement->MaxSpeed = FloatingMovement->MaxSpeed * 2;
-
 }
 
 void AC_KingPawn::ReturnSpeedMoveMode()

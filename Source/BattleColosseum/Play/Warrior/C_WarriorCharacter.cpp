@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "C_WarriorCharacter.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 
 
 // Sets default values
@@ -9,6 +11,10 @@ AC_WarriorCharacter::AC_WarriorCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Movement = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("CharacterMovement"));
+	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+
+	RootComponent = Cast<USceneComponent>(Capsule);
 }
 
 // Called when the game starts or when spawned

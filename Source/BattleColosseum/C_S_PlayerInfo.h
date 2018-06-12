@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "C_BaseCharacter.h"
 #include "C_S_PlayerInfo.generated.h"
 
 USTRUCT(BlueprintType)
@@ -13,7 +13,7 @@ struct FC_S_Characters {
 	FC_S_Characters();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class TSubclassOf<ACharacter> Character;
+	class TSubclassOf<AC_BaseCharacter> Character;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UTexture2D* Sumnail;

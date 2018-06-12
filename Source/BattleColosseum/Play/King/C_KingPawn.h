@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
+#include "C_BaseCharacter.h"
 #include "C_KingPawn.generated.h"
 
 UCLASS()
-class BATTLECOLOSSEUM_API AC_KingPawn : public APawn
+class BATTLECOLOSSEUM_API AC_KingPawn : public AC_BaseCharacter
 {
 	GENERATED_BODY()
 
@@ -48,8 +48,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class USceneComponent* Scene;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UCameraComponent* Camera;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* CastArrow;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
