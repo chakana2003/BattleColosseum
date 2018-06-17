@@ -53,6 +53,9 @@ AC_LobbyCharacter::AC_LobbyCharacter() {
 	UserID->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
 	UserID->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
 	UserID->SetText(TEXT("USER ID"));
+	UserID->SetIsReplicated(true);
+
+	CharacterMovement->Activate(true);
 }
 
 void AC_LobbyCharacter::BeginPlay()

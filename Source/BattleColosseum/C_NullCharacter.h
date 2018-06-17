@@ -41,4 +41,6 @@ public: // ÇÔ¼ö
 	void ForceA();
 	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
 	void ForceD();
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+	void JumpHigh();
 };

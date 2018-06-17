@@ -40,6 +40,7 @@ AC_NullCharacter::AC_NullCharacter() {
 	Projectile->MaxSimulationTimeStep = 0.02f;
 	Projectile->MaxSimulationIterations = 10;
 	Projectile->SetIsReplicated(true);
+	Projectile->BounceVelocityStopSimulatingThreshold = 0.5f;
 
 	Box->SetCollisionProfileName(TEXT("BlockAll"));
 	Box->SetSimulatePhysics(true);
@@ -60,11 +61,12 @@ AC_NullCharacter::AC_NullCharacter() {
 	SpringArm->CameraRotationLagSpeed = 20.f;
 	SpringArm->RelativeRotation = FRotator(-30.f, 0.f, 0.f);
 
-	UserID->SetRelativeLocation(FVector(0.f, 0.f, 30.f));
+	UserID->SetRelativeLocation(FVector(0.f, 0.f, 50.f));
 	UserID->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
 	UserID->SetText(TEXT("USER ID"));
 	UserID->XScale = 5.f;
 	UserID->YScale = 5.f;
+	UserID->SetIsReplicated(true);
 }
 
 void AC_NullCharacter::SetupPlayerInputComponent(UInputComponent * PlayerInputComponent)
@@ -75,6 +77,7 @@ void AC_NullCharacter::SetupPlayerInputComponent(UInputComponent * PlayerInputCo
 	PlayerInputComponent->BindAction("K_ImpactS", IE_Pressed, this, &AC_NullCharacter::ForceS);
 	PlayerInputComponent->BindAction("K_ImpactA", IE_Pressed, this, &AC_NullCharacter::ForceA);
 	PlayerInputComponent->BindAction("K_ImpactD", IE_Pressed, this, &AC_NullCharacter::ForceD);
+	PlayerInputComponent->BindAction("K_Jump", IE_Pressed, this, &AC_NullCharacter::JumpHigh);
 }
 
 bool AC_NullCharacter::ForceW_Validate() {
@@ -104,4 +107,11 @@ bool AC_NullCharacter::ForceD_Validate() {
 }
 void AC_NullCharacter::ForceD_Implementation() {
 	StaticMesh->AddImpulseAtLocation(FVector(0.f, 20000.f, 0.f), GetActorLocation());
+}
+
+bool AC_NullCharacter::JumpHigh_Validate() {
+	return true;
+}
+void AC_NullCharacter::JumpHigh_Implementation() {
+	StaticMesh->AddImpulseAtLocation(FVector(0.f, 0.f, 100000.f), GetActorLocation());
 }

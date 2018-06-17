@@ -29,6 +29,8 @@ public: // 변수
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UTextRenderComponent* UserID;
 
+	class UPawnMovementComponent* Yes;
+
 	// RunningState, 뛰기 불리언.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Code", Replicated)
 		bool IsSprinting;
