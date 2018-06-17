@@ -11,6 +11,8 @@ AC_BaseCharacter::AC_BaseCharacter()
 	
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 
+	bReplicates = true;
+
 }
 
 // Called when the game starts or when spawned

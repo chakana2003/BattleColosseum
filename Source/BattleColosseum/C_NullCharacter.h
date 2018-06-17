@@ -18,12 +18,27 @@ public:
 	AC_NullCharacter();
 
 public: // 변수
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
 	class UBoxComponent* Box;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UProjectileMovementComponent* Projectile;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UStaticMeshComponent* StaticMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class USpringArmComponent* SpringArm;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class UTextRenderComponent* UserID;
 
 public: // 함수
-	
-	
+
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+	void ForceW();
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+	void ForceS();
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+	void ForceA();
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+	void ForceD();
 };
