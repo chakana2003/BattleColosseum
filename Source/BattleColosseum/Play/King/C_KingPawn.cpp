@@ -8,6 +8,8 @@
 #include "Components/ArrowComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 
 // Sets default values
 AC_KingPawn::AC_KingPawn()
@@ -18,6 +20,10 @@ AC_KingPawn::AC_KingPawn()
 	CastArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("CastArrow"));
 	FloatingMovement= CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingMovement"));
 	CastArrow->SetupAttachment(Camera);
+
+	GetCapsuleComponent()->SetActive(false);
+	GetCharacterMovement()->SetActive(false);
+	GetMesh()->SetActive(false);
 	
 	// 생성자에서는 Controller 가 없기 때문에 NULL 을 반환해서 크러쉬 발생 - 에디터 강제종료
 
