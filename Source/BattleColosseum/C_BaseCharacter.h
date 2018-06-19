@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "GameFramework/Pawn.h"
 #include "C_BaseCharacter.generated.h"
 
 UCLASS()
-class BATTLECOLOSSEUM_API AC_BaseCharacter : public ACharacter
+class BATTLECOLOSSEUM_API AC_BaseCharacter : public APawn
 {
 	GENERATED_BODY()
 

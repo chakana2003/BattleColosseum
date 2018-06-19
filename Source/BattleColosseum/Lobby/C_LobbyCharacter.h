@@ -19,11 +19,19 @@ public:
 
 public: // 변수
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class USkeletalMeshComponent* SkeletalMesh;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class UCapsuleComponent* Capsule;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class USpringArmComponent* SpringArm;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class UCharacterMovementComponent* CharacterMovement;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UTextRenderComponent* UserID;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UCameraComponent* Camera;
+
+	class UPawnMovementComponent* Yes;
 
 	// RunningState, 뛰기 불리언.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Code", Replicated)

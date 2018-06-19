@@ -27,6 +27,8 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:  // 변수
+	class UCharacterMovementComponent* Movement;
+	class UCapsuleComponent* Capsule;
 
 public:  // 함수
 	
