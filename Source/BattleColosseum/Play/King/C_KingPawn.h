@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "C_BaseCharacter.h"
+#include "GameFramework/Pawn.h"
 #include "C_KingPawn.generated.h"
 
 UCLASS()
-class BATTLECOLOSSEUM_API AC_KingPawn : public AC_BaseCharacter
+class BATTLECOLOSSEUM_API AC_KingPawn : public APawn
 {
 	GENERATED_BODY()
 
@@ -52,6 +52,8 @@ public:
 	class UArrowComponent* CastArrow;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UFloatingPawnMovement* FloatingMovement;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		class UCameraComponent* Camera;
 
 	FVector ZoomVector;
 	float FlySpeed;

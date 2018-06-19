@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "C_BaseCharacter.h"
+#include "GameFramework/Character.h"
 #include "C_WarriorCharacter.generated.h"
 
 UCLASS()
-class BATTLECOLOSSEUM_API AC_WarriorCharacter : public AC_BaseCharacter
+class BATTLECOLOSSEUM_API AC_WarriorCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -27,8 +27,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:  // 변수
-	class UCharacterMovementComponent* Movement;
-	class UCapsuleComponent* Capsule;
 
 public:  // 함수
 	

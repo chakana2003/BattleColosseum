@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "C_BaseCharacter.h"
+#include "GameFramework/Character.h"
 #include "C_LobbyCharacter.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BATTLECOLOSSEUM_API AC_LobbyCharacter : public AC_BaseCharacter
+class BATTLECOLOSSEUM_API AC_LobbyCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -19,17 +19,11 @@ public:
 
 public: // 변수
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	class USkeletalMeshComponent* SkeletalMesh;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	class UCapsuleComponent* Capsule;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class USpringArmComponent* SpringArm;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	class UCharacterMovementComponent* CharacterMovement;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UTextRenderComponent* UserID;
-
-	class UPawnMovementComponent* Yes;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	class UCameraComponent* Camera;
 
 	// RunningState, 뛰기 불리언.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Code", Replicated)
