@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "C_BaseCharacter.h"
+#include "GameFramework/Pawn.h"
 #include "C_S_PlayerInfo.generated.h"
 
 USTRUCT(BlueprintType)
@@ -14,10 +14,10 @@ struct FC_S_Characters {
 	class UTexture2D* Sumnail;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class TSubclassOf<AC_BaseCharacter> LobbyCharacter;
+	class TSubclassOf<APawn> LobbyCharacter;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class TSubclassOf<AC_BaseCharacter> GameCharacter;
+	class TSubclassOf<APawn> GameCharacter;
 };
 
 

@@ -56,8 +56,6 @@ void AC_KingPawn::Tick(float DeltaTime)
 // Called to bind functionality to input
 void AC_KingPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 	PlayerInputComponent->BindAxis(TEXT("K_MoveForward"), this, &AC_KingPawn::MoveForward);
 	PlayerInputComponent->BindAxis(TEXT("K_Turn"), this, &AC_KingPawn::Turn);
 	PlayerInputComponent->BindAxis(TEXT("K_MoveRight"), this, &AC_KingPawn::MoveRight);

@@ -19,13 +19,7 @@ AC_NullCharacter::AC_NullCharacter() {
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Springarm"));
 	UserID = CreateDefaultSubobject<UTextRenderComponent>(TEXT("UserID"));
-<<<<<<< HEAD
-<<<<<<< HEAD
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-=======
->>>>>>> parent of 37a52f7... Play 맵 입장까지 구현
-=======
->>>>>>> parent of 37a52f7... Play 맵 입장까지 구현
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Sphere(TEXT("StaticMesh'/Game/Meshes/Cube.Cube'"));
 
