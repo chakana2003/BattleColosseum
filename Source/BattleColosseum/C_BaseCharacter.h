@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "C_WarriorCharacter.generated.h"
+#include "GameFramework/Pawn.h"
+#include "C_BaseCharacter.generated.h"
 
 UCLASS()
-class BATTLECOLOSSEUM_API AC_WarriorCharacter : public ACharacter
+class BATTLECOLOSSEUM_API AC_BaseCharacter : public APawn
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
-	AC_WarriorCharacter();
+	// Sets default values for this pawn's properties
+	AC_BaseCharacter();
 
 protected:
 	// Called when the game starts or when spawned
@@ -27,9 +27,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:  // 변수
-	class UCharacterMovementComponent* Movement;
-	class UCapsuleComponent* Capsule;
 
-public:  // 함수
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UCameraComponent* Camera;
 	
+public:  // 함수
+
 };

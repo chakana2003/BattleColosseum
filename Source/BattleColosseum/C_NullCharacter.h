@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
+#include "C_BaseCharacter.h"
 #include "C_NullCharacter.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BATTLECOLOSSEUM_API AC_NullCharacter : public APawn
+class BATTLECOLOSSEUM_API AC_NullCharacter : public AC_BaseCharacter
 {
 	GENERATED_BODY()
 	
@@ -28,8 +28,11 @@ public: // º¯¼ö
 	class USpringArmComponent* SpringArm;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UTextRenderComponent* UserID;
+<<<<<<< HEAD
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UCameraComponent* Camera;
+=======
+>>>>>>> parent of 37a52f7... Play ë§µ ìž…ìž¥ê¹Œì§€ êµ¬í˜„
 
 public: // ÇÔ¼ö
 

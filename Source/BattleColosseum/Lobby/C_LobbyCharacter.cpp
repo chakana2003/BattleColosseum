@@ -14,15 +14,23 @@
 
 
 AC_LobbyCharacter::AC_LobbyCharacter() {
+<<<<<<< HEAD
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+=======
+	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Body"));
+	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+>>>>>>> parent of 37a52f7... Play ë§µ ìž…ìž¥ê¹Œì§€ êµ¬í˜„
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	CharacterMovement = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("CharacterMovement"));
 	UserID = CreateDefaultSubobject<UTextRenderComponent>(TEXT("UserID"));
 
-	SpringArm->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+	RootComponent = Capsule;
+	SkeletalMesh->SetupAttachment(Capsule);
+	SpringArm->AttachToComponent((USceneComponent*)Capsule, FAttachmentTransformRules::KeepRelativeTransform);
 	Camera->AttachToComponent(SpringArm, FAttachmentTransformRules::KeepRelativeTransform);
-	UserID->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
+	UserID->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::KeepRelativeTransform);
 
-	GetMesh()->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -88.f), FRotator(0.f, -90.f, 0.f));
+	SkeletalMesh->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -88.f), FRotator(0.f, -90.f, 0.f));
 
 	bReplicates = true;
 
@@ -41,15 +49,23 @@ AC_LobbyCharacter::AC_LobbyCharacter() {
 	SpringArm->CameraLagSpeed = 9.0f;
 	SpringArm->CameraRotationLagSpeed = 9.0f;
 
+<<<<<<< HEAD
 	GetCapsuleComponent()->SetNotifyRigidBodyCollision(true);  // hit ÀÌº¥Æ® È°¼ºÈ­(¿¾³¯ÀÌ¸§)
 	GetCapsuleComponent()->SetCapsuleHalfHeight(88.f);
 	GetCapsuleComponent()->SetCapsuleRadius(34.f);
+=======
+	Capsule->SetNotifyRigidBodyCollision(true);  // hit ÀÌº¥Æ® È°¼ºÈ­(¿¾³¯ÀÌ¸§)
+	Capsule->SetCapsuleHalfHeight(88.f);
+	Capsule->SetCapsuleRadius(34.f);
+>>>>>>> parent of 37a52f7... Play ë§µ ìž…ìž¥ê¹Œì§€ êµ¬í˜„
 
 	UserID->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
 	UserID->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
 	UserID->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
 	UserID->SetText(FText::FromString(TEXT("UserID")));
 	UserID->SetIsReplicated(true);
+
+	CharacterMovement->Activate(true);
 }
 
 void AC_LobbyCharacter::BeginPlay()
@@ -107,6 +123,7 @@ void AC_LobbyCharacter::SwitchView()
 void AC_LobbyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+<<<<<<< HEAD
 	if (GetCharacterMovement()) {
 		if (IsSprinting) {
 			// Ä³¸¯ÅÍ ¹«ºê¸ÕÆ® ÄÄÆ÷³ÍÆ®ÀÇ Max Speed °ªÀ» Sprint_Speed·Î ¹Ù²Þ
@@ -116,6 +133,15 @@ void AC_LobbyCharacter::Tick(float DeltaTime)
 			// Ä³¸¯ÅÍ ¹«ºê¸ÕÆ® ÄÄÆ÷³ÍÆ®ÀÇ Max Speed °ªÀ» Ori_Speed·Î ¹Ù²Þ
 			GetCharacterMovement()->MaxWalkSpeed = Ori_Speed;
 		}
+=======
+	if (IsSprinting) {
+		// Ä³¸¯ÅÍ ¹«ºê¸ÕÆ® ÄÄÆ÷³ÍÆ®ÀÇ Max Speed °ªÀ» Sprint_Speed·Î ¹Ù²Þ
+		CharacterMovement->MaxWalkSpeed = Sprint_Speed;
+	}
+	else {
+		// Ä³¸¯ÅÍ ¹«ºê¸ÕÆ® ÄÄÆ÷³ÍÆ®ÀÇ Max Speed °ªÀ» Ori_Speed·Î ¹Ù²Þ
+		CharacterMovement->MaxWalkSpeed = Ori_Speed;
+>>>>>>> parent of 37a52f7... Play ë§µ ìž…ìž¥ê¹Œì§€ êµ¬í˜„
 	}
 }
 
@@ -145,6 +171,6 @@ void AC_LobbyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 }
 
 void AC_LobbyCharacter::Jumpp() {
-	Jump();
+	CharacterMovement->DoJump(true);
 }
 
