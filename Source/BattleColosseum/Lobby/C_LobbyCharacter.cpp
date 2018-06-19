@@ -15,7 +15,12 @@
 
 AC_LobbyCharacter::AC_LobbyCharacter() {
 <<<<<<< HEAD
+<<<<<<< HEAD
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+=======
+	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Body"));
+	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+>>>>>>> parent of 37a52f7... Play ë§µ ìž…ìž¥ê¹Œì§€ êµ¬í˜„
 =======
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Body"));
 	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
@@ -50,9 +55,15 @@ AC_LobbyCharacter::AC_LobbyCharacter() {
 	SpringArm->CameraRotationLagSpeed = 9.0f;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	GetCapsuleComponent()->SetNotifyRigidBodyCollision(true);  // hit ÀÌº¥Æ® È°¼ºÈ­(¿¾³¯ÀÌ¸§)
 	GetCapsuleComponent()->SetCapsuleHalfHeight(88.f);
 	GetCapsuleComponent()->SetCapsuleRadius(34.f);
+=======
+	Capsule->SetNotifyRigidBodyCollision(true);  // hit ÀÌº¥Æ® È°¼ºÈ­(¿¾³¯ÀÌ¸§)
+	Capsule->SetCapsuleHalfHeight(88.f);
+	Capsule->SetCapsuleRadius(34.f);
+>>>>>>> parent of 37a52f7... Play ë§µ ìž…ìž¥ê¹Œì§€ êµ¬í˜„
 =======
 	Capsule->SetNotifyRigidBodyCollision(true);  // hit ÀÌº¥Æ® È°¼ºÈ­(¿¾³¯ÀÌ¸§)
 	Capsule->SetCapsuleHalfHeight(88.f);
@@ -124,6 +135,7 @@ void AC_LobbyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 <<<<<<< HEAD
+<<<<<<< HEAD
 	if (GetCharacterMovement()) {
 		if (IsSprinting) {
 			// Ä³¸¯ÅÍ ¹«ºê¸ÕÆ® ÄÄÆ÷³ÍÆ®ÀÇ Max Speed °ªÀ» Sprint_Speed·Î ¹Ù²Þ
@@ -134,6 +146,8 @@ void AC_LobbyCharacter::Tick(float DeltaTime)
 			GetCharacterMovement()->MaxWalkSpeed = Ori_Speed;
 		}
 =======
+=======
+>>>>>>> parent of 37a52f7... Play ë§µ ìž…ìž¥ê¹Œì§€ êµ¬í˜„
 	if (IsSprinting) {
 		// Ä³¸¯ÅÍ ¹«ºê¸ÕÆ® ÄÄÆ÷³ÍÆ®ÀÇ Max Speed °ªÀ» Sprint_Speed·Î ¹Ù²Þ
 		CharacterMovement->MaxWalkSpeed = Sprint_Speed;
@@ -141,6 +155,9 @@ void AC_LobbyCharacter::Tick(float DeltaTime)
 	else {
 		// Ä³¸¯ÅÍ ¹«ºê¸ÕÆ® ÄÄÆ÷³ÍÆ®ÀÇ Max Speed °ªÀ» Ori_Speed·Î ¹Ù²Þ
 		CharacterMovement->MaxWalkSpeed = Ori_Speed;
+<<<<<<< HEAD
+>>>>>>> parent of 37a52f7... Play ë§µ ìž…ìž¥ê¹Œì§€ êµ¬í˜„
+=======
 >>>>>>> parent of 37a52f7... Play ë§µ ìž…ìž¥ê¹Œì§€ êµ¬í˜„
 	}
 }

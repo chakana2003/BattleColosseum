@@ -29,8 +29,11 @@ public: // ����
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UTextRenderComponent* UserID;
 <<<<<<< HEAD
+<<<<<<< HEAD
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UCameraComponent* Camera;
+=======
+>>>>>>> parent of 37a52f7... Play 맵 입장까지 구현
 =======
 >>>>>>> parent of 37a52f7... Play 맵 입장까지 구현
 

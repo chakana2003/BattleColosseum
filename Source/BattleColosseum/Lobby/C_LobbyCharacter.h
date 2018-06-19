@@ -33,6 +33,8 @@ public: // 변수
 
 	class UPawnMovementComponent* Yes;
 
+	class UPawnMovementComponent* Yes;
+
 	// RunningState, 뛰기 불리언.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Code", Replicated)
 		bool IsSprinting;

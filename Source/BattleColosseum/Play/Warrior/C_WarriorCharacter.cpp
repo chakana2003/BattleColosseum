@@ -17,6 +17,9 @@ AC_WarriorCharacter::AC_WarriorCharacter()
 	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
 
 	RootComponent = Cast<USceneComponent>(Capsule);
+<<<<<<< HEAD
+>>>>>>> parent of 37a52f7... Play 맵 입장까지 구현
+=======
 >>>>>>> parent of 37a52f7... Play 맵 입장까지 구현
 }
 
