@@ -13,11 +13,14 @@ AC_WarriorCharacter::AC_WarriorCharacter()
 <<<<<<< HEAD
 =======
 
+<<<<<<< HEAD
 	Movement = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("CharacterMovement"));
 	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
 
 	RootComponent = Cast<USceneComponent>(Capsule);
 >>>>>>> parent of 37a52f7... Play 맵 입장까지 구현
+=======
+>>>>>>> 37a52f78132bbfa08e7339e6a5f52f3fc407f624
 }
 
 // Called when the game starts or when spawned

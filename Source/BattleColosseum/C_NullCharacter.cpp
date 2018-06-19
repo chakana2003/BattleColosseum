@@ -11,26 +11,35 @@
 #include "Components/PrimitiveComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Lobby/C_LobbyPC.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Components/ArrowComponent.h"
+#include "Camera/CameraComponent.h"
 
 
 AC_NullCharacter::AC_NullCharacter() {
-	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Sphere"));
-	Projectile = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
-	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
-	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Springarm"));
+	Box = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
+	Projectile = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjecMove"));
+	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticM"));
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	UserID = CreateDefaultSubobject<UTextRenderComponent>(TEXT("UserID"));
+<<<<<<< HEAD
 <<<<<<< HEAD
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 =======
 >>>>>>> parent of 37a52f7... Play 맵 입장까지 구현
+=======
+	Cam = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+>>>>>>> 37a52f78132bbfa08e7339e6a5f52f3fc407f624
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Sphere(TEXT("StaticMesh'/Game/Meshes/Cube.Cube'"));
 
 	RootComponent = Box;
 	StaticMesh->AttachToComponent(Box, FAttachmentTransformRules::KeepRelativeTransform);
 	SpringArm->AttachToComponent(StaticMesh,FAttachmentTransformRules::KeepRelativeTransform);
-	Camera->AttachToComponent(SpringArm,FAttachmentTransformRules::KeepRelativeTransform);
 	UserID->AttachToComponent(StaticMesh, FAttachmentTransformRules::KeepRelativeTransform);
+	Cam->AttachToComponent(SpringArm, FAttachmentTransformRules::KeepRelativeTransform);
 
 	Projectile->bRotationFollowsVelocity = false;
 	Projectile->bShouldBounce = true;
@@ -73,10 +82,13 @@ AC_NullCharacter::AC_NullCharacter() {
 	UserID->SetIsReplicated(true);
 }
 
+void AC_NullCharacter::BeginPlay()
+{
+
+}
+
 void AC_NullCharacter::SetupPlayerInputComponent(UInputComponent * PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 	PlayerInputComponent->BindAction("K_ImpactW", IE_Pressed, this, &AC_NullCharacter::ForceW);
 	PlayerInputComponent->BindAction("K_ImpactS", IE_Pressed, this, &AC_NullCharacter::ForceS);
 	PlayerInputComponent->BindAction("K_ImpactA", IE_Pressed, this, &AC_NullCharacter::ForceA);
