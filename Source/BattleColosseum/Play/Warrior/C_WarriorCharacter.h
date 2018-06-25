@@ -16,7 +16,7 @@ public:
 	AC_WarriorCharacter();
 
 	// º¯¼ö
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		class USpringArmComponent* SpringArm;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		class UTextRenderComponent* UserID;
