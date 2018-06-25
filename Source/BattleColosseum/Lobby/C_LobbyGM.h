@@ -14,7 +14,11 @@ class BATTLECOLOSSEUM_API AC_LobbyGM : public AGameModeBase
 {
 	GENERATED_BODY()
 	
-	
+public:
+	AC_LobbyGM();
+
+	UFUNCTION(BlueprintCallable)
+	void MoveWorld(FString LevelName);
 	
 	
 };

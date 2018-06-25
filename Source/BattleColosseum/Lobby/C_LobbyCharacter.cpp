@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "C_WarriorCharacter.h"
+#include "C_LobbyCharacter.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -13,7 +13,7 @@
 #include "Components/TextRenderComponent.h"
 
 
-AC_WarriorCharacter::AC_WarriorCharacter() {
+AC_LobbyCharacter::AC_LobbyCharacter() {
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	UserID = CreateDefaultSubobject<UTextRenderComponent>(TEXT("UserID"));
@@ -52,7 +52,7 @@ AC_WarriorCharacter::AC_WarriorCharacter() {
 	UserID->SetIsReplicated(true);
 }
 
-void AC_WarriorCharacter::BeginPlay()
+void AC_LobbyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -60,39 +60,39 @@ void AC_WarriorCharacter::BeginPlay()
 	Sprint_Speed = Ori_Speed * SprintRate;
 }
 
-void AC_WarriorCharacter::MoveForward(float Value)
+void AC_LobbyCharacter::MoveForward(float Value)
 {
 	if (Value != 0.f) {
 		AddMovementInput(GetActorForwardVector(), Value);
 	}
 }
 
-void AC_WarriorCharacter::MoveRight(float Value)
+void AC_LobbyCharacter::MoveRight(float Value)
 {
 	if (Value != 0.f) {
 		AddMovementInput(GetActorRightVector(), Value);
 	}
 }
 
-bool AC_WarriorCharacter::ActiveSprint_Validate() {
+bool AC_LobbyCharacter::ActiveSprint_Validate() {
 	return true;
 }
 
-void AC_WarriorCharacter::ActiveSprint_Implementation() {
+void AC_LobbyCharacter::ActiveSprint_Implementation() {
 	if (!IsSprinting)
 		IsSprinting = true;
 }
 
-bool AC_WarriorCharacter::DeActiveSprint_Validate() {
+bool AC_LobbyCharacter::DeActiveSprint_Validate() {
 	return true;
 }
 
-void AC_WarriorCharacter::DeActiveSprint_Implementation() {
+void AC_LobbyCharacter::DeActiveSprint_Implementation() {
 	if (IsSprinting)
 		IsSprinting = false;
 }
 
-void AC_WarriorCharacter::SwitchView()
+void AC_LobbyCharacter::SwitchView()
 {
 	if (RightView) {
 		RightView = false;
@@ -104,7 +104,7 @@ void AC_WarriorCharacter::SwitchView()
 	}
 }
 
-void AC_WarriorCharacter::Tick(float DeltaTime)
+void AC_LobbyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (IsSprinting) {
@@ -118,32 +118,32 @@ void AC_WarriorCharacter::Tick(float DeltaTime)
 
 }
 
-void AC_WarriorCharacter::SetupPlayerInputComponent(UInputComponent * PlayerInputComponent)
+void AC_LobbyCharacter::SetupPlayerInputComponent(UInputComponent * PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAxis("K_MoveForward", this, &AC_WarriorCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("K_MoveRight", this, &AC_WarriorCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("K_MoveForward", this, &AC_LobbyCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("K_MoveRight", this, &AC_LobbyCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("K_LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("K_Turn", this, &APawn::AddControllerYawInput);
 
-	PlayerInputComponent->BindAction("K_Jump", IE_Pressed, this, &AC_WarriorCharacter::Jumpp);
+	PlayerInputComponent->BindAction("K_Jump", IE_Pressed, this, &AC_LobbyCharacter::Jumpp);
 
-	PlayerInputComponent->BindAction("K_Sprint", IE_Pressed, this, &AC_WarriorCharacter::ActiveSprint);
-	PlayerInputComponent->BindAction("K_Sprint", IE_Released, this, &AC_WarriorCharacter::DeActiveSprint);
+	PlayerInputComponent->BindAction("K_Sprint", IE_Pressed, this, &AC_LobbyCharacter::ActiveSprint);
+	PlayerInputComponent->BindAction("K_Sprint", IE_Released, this, &AC_LobbyCharacter::DeActiveSprint);
 
-	PlayerInputComponent->BindAction("K_SwitchView", IE_Pressed, this, &AC_WarriorCharacter::SwitchView);
+	PlayerInputComponent->BindAction("K_SwitchView", IE_Pressed, this, &AC_LobbyCharacter::SwitchView);
 }
 
-void AC_WarriorCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+void AC_LobbyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	// Replicate to everyone
-	DOREPLIFETIME(AC_WarriorCharacter, IsSprinting);
+	DOREPLIFETIME(AC_LobbyCharacter, IsSprinting);
 }
 
-void AC_WarriorCharacter::Jumpp() {
+void AC_LobbyCharacter::Jumpp() {
 	Jump();
 }
 

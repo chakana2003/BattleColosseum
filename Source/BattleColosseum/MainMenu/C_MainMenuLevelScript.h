@@ -3,22 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/GameModeBase.h"
-#include "C_MainMenuGM.generated.h"
+#include "Engine/LevelScriptActor.h"
+#include "C_MainMenuLevelScript.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BATTLECOLOSSEUM_API AC_MainMenuGM : public AGameModeBase
+class BATTLECOLOSSEUM_API AC_MainMenuLevelScript : public ALevelScriptActor
 {
 	GENERATED_BODY()
-	
+
 public:
-	AC_MainMenuGM();
-	
+	AC_MainMenuLevelScript();
+
 public: // 변수
-	
 
 public: // 함수
 };

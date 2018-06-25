@@ -4,24 +4,26 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "C_WarriorCharacter.generated.h"
+#include "C_LobbyCharacter.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
-class BATTLECOLOSSEUM_API AC_WarriorCharacter : public ACharacter
+class BATTLECOLOSSEUM_API AC_LobbyCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
-	AC_WarriorCharacter();
+	AC_LobbyCharacter();
 
-	// 변수
+public: // 변수
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		class USpringArmComponent* SpringArm;
+	class USpringArmComponent* SpringArm;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		class UTextRenderComponent* UserID;
+	class UTextRenderComponent* UserID;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-		class UCameraComponent* Camera;
+	class UCameraComponent* Camera;
 
 	// RunningState, 뛰기 불리언.
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Code", Replicated)
@@ -62,8 +64,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 
 	void Jumpp();
+	
 	
 };

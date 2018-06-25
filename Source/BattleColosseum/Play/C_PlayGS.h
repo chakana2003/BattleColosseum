@@ -3,19 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
-#include "C_MainMenuPC.generated.h"
+#include "GameFramework/GameStateBase.h"
+#include "C_PlayGS.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BATTLECOLOSSEUM_API AC_MainMenuPC : public APlayerController
+class BATTLECOLOSSEUM_API AC_PlayGS : public AGameStateBase
 {
 	GENERATED_BODY()
-
-public:
 	
-public:
+	
+	
 	
 };

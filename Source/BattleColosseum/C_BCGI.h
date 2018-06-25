@@ -14,7 +14,11 @@ class BATTLECOLOSSEUM_API UC_BCGI : public UGameInstance
 {
 	GENERATED_BODY()
 	
-	
-	
-	
+public:		// 변수
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	FString SAVEGAME;
+
+public:		// 함수
+	UC_BCGI();
 };

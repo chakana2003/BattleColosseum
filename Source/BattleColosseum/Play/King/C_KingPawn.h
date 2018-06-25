@@ -25,7 +25,36 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	// FVector ForwordDirection;
 
-	
-	
+
+	UFUNCTION()
+		void Turn(float Value);
+	UFUNCTION()
+		void Lookup(float Value);
+	UFUNCTION()
+		void MoveForward(float Value);
+	UFUNCTION()
+		void MoveRight(float Value);
+	UFUNCTION()
+		void ZoomIn(float Value);
+	UFUNCTION()
+		void SpeedMoveMode();
+	UFUNCTION()
+		void ReturnSpeedMoveMode();
+
+
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class USceneComponent* Scene;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UArrowComponent* CastArrow;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UFloatingPawnMovement* FloatingMovement;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+		class UCameraComponent* Camera;
+
+	FVector ZoomVector;
+	float FlySpeed;
 };
