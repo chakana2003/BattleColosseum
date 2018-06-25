@@ -25,15 +25,17 @@ public: // ÇÔ¼ö
 
 	AC_PlayGM();
 	
-	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage);
-
-	virtual void SwapPlayerControllers(APlayerController* OldPC, APlayerController* NewPC);
-
-	virtual void HandleSeamlessTravelPlayer(AController*& C);
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 
 	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
 	void SpawnCharacter_WaitTime(APlayerController* PC, TSubclassOf<APawn> Character);
 
-	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
+	virtual void SwapPlayerControllers(APlayerController* OldPC, APlayerController* NewPC) override;
+
+	virtual void HandleSeamlessTravelPlayer(AController*& C) override;
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	virtual void PostSeamlessTravel() override;
 	
 };

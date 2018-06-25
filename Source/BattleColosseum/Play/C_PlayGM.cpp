@@ -28,6 +28,7 @@ void AC_PlayGM::InitGame(const FString& MapName, const FString& Options, FString
 		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("1-1. Not Create SpawnBox"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 	}
 
+	UKismetSystemLibrary::PrintString(GetWorld(), TEXT("InitGame Call"), true, true, FLinearColor(1.f, 1.f, 1.f, 1.f), 10.f);
 }
 
 void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerController * NewPC)
@@ -35,21 +36,37 @@ void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerControll
 	if (Cast<AC_LobbyPC>(OldPC)) {
 		if (Cast<AC_PlayPC>(NewPC)) {
 			Cast<AC_PlayPC>(NewPC)->MyInfo = Cast<AC_LobbyPC>(OldPC)->MyInfo;
+			ConnectedPlayerControllers.Add(NewPC);
+			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. MyInfo Coppy"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+		}
+		else {
+			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2-1. NewPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 		}
 	}
+	else {
+		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2-2. OldPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
+	}
+	UKismetSystemLibrary::PrintString(GetWorld(), TEXT("SwapPlayerControllers Call"), true, true, FLinearColor(1.f, 1.f, 1.f, 1.f), 10.f);
 }
 
 void AC_PlayGM::HandleSeamlessTravelPlayer(AController *& C)
 {
-	if (ConnectedPlayerControllers.IsValidIndex(0)) {
-		for (APlayerController* TempPC : ConnectedPlayerControllers) {
-			AC_PlayPC* PC = Cast<AC_PlayPC>(TempPC);
-			if (PC) {
-				SpawnCharacter_WaitTime(PC, PC->MyInfo.SelectCharacter.GameCharacter);
-			}
+	/*APlayerController* PC = Cast<APlayerController>(C);
+	if (PC) {
+		ConnectedPlayerControllers.Add(PC);
+		AC_PlayPC* PlayPC = Cast<AC_PlayPC>(PC);
+		if (PC) {
+			SpawnCharacter_WaitTime(PlayPC, PlayPC->MyInfo.SelectCharacter.GameCharacter);
+			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("3. Wait Time Spawn Done!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+		}
+		else {
+			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("3-1. PC to AC_PlayPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 		}
 	}
-	
+	else {
+		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("3-2. New Controller Cast to PlayerController Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
+	}*/
+	UKismetSystemLibrary::PrintString(GetWorld(), TEXT("HandleSeamlessTravelPlayer Call"), true, true, FLinearColor(1.f, 1.f, 1.f, 1.f), 10.f);
 }
 
 void AC_PlayGM::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -58,12 +75,31 @@ void AC_PlayGM::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 	DOREPLIFETIME(AC_PlayGM, ConnectedPlayerControllers);
 }
 
+void AC_PlayGM::PostSeamlessTravel()
+{
+	for (APlayerController* PC : ConnectedPlayerControllers) {
+		AC_PlayPC* PlayPC = Cast<AC_PlayPC>(PC);
+		if (PlayPC) {
+			SpawnCharacter_WaitTime(PlayPC, PlayPC->MyInfo.SelectCharacter.GameCharacter);
+			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("3. SpawnCharacter Function Called!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+		}
+		else {
+			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("3-1. Pc to PlayPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
+		}
+	}
+	UKismetSystemLibrary::PrintString(GetWorld(), TEXT("PostSeamlessTravel Call"), true, true, FLinearColor(1.f, 1.f, 1.f, 1.f), 10.f);
+}
+
 bool AC_PlayGM::SpawnCharacter_WaitTime_Validate(APlayerController* PC, TSubclassOf<APawn> Character) {
 	return true;
 }
 void AC_PlayGM::SpawnCharacter_WaitTime_Implementation(APlayerController* PC, TSubclassOf<APawn> Character) {
 	if (PC->GetPawn()) {
 		PC->GetPawn()->Destroy();
+		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. Controlled Pawn Destroy Done!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+	}
+	else {
+		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4-1. Not exist Controlled Pawn"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 	}
 	if (SpawnBox) {
 		FVector RandPos = UKismetMathLibrary::RandomPointInBoundingBox(SpawnBox->GetActorLocation(), SpawnBox->BoxCompo->GetScaledBoxExtent());
@@ -77,9 +113,18 @@ void AC_PlayGM::SpawnCharacter_WaitTime_Implementation(APlayerController* PC, TS
 
 		AActor* SpawnedAct = UGameplayStatics::BeginDeferredActorSpawnFromClass(GetWorld(), Character, SpawnTransform, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 		APawn* Pawn = Cast<APawn>(SpawnedAct);
+		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("5. NewPawn Spawned!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 		if (Pawn) {
 			PC->Possess(Pawn);
+			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("6. Possess Done"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+		}
+		else
+		{
+			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("6-1. Possess Error Because Pawn does not exist(not spawn)"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 		}
 	}
-	
+	else {
+		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("5-1. Pawn does not Spawn(Because SpawnBox not Exist"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
+	}
+	UKismetSystemLibrary::PrintString(GetWorld(), TEXT("SpawnCharacter_WaitTime Call"), true, true, FLinearColor(1.f, 1.f, 1.f, 1.f), 10.f);
 }
