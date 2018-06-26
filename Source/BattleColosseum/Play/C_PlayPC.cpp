@@ -27,9 +27,9 @@ bool AC_PlayPC::PassCharacterToServer_Validate(FC_S_PlayerInfo NewInfo)
 }
 void AC_PlayPC::PassCharacterToServer_Implementation(FC_S_PlayerInfo NewInfo) {
 	MyInfo = NewInfo;
-
 	AC_PlayGM* GM = Cast<AC_PlayGM>(UGameplayStatics::GetGameMode(GetWorld()));
 	if (GM) {
 		GM->SpawnCharacter_WaitTime(this, MyInfo.SelectCharacter.GameCharacter);
 	}
+
 }
