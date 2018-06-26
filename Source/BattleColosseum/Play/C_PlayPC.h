@@ -28,4 +28,6 @@ public: // ÇÔ¼ö
 	
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+	void PassCharacterToServer(FC_S_PlayerInfo NewInfo);
 };

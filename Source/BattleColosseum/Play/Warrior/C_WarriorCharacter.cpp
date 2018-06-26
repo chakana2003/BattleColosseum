@@ -65,6 +65,7 @@ void AC_WarriorCharacter::MoveForward(float Value)
 	if (Value != 0.f) {
 		AddMovementInput(GetActorForwardVector(), Value);
 	}
+	UpdateFSpeed(Value);
 }
 
 void AC_WarriorCharacter::MoveRight(float Value)
@@ -72,6 +73,7 @@ void AC_WarriorCharacter::MoveRight(float Value)
 	if (Value != 0.f) {
 		AddMovementInput(GetActorRightVector(), Value);
 	}
+	UpdateRSpeed(Value);
 }
 
 bool AC_WarriorCharacter::ActiveSprint_Validate() {
@@ -141,9 +143,24 @@ void AC_WarriorCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 
 	// Replicate to everyone
 	DOREPLIFETIME(AC_WarriorCharacter, IsSprinting);
+	DOREPLIFETIME(AC_WarriorCharacter, FSpeed);
+	DOREPLIFETIME(AC_WarriorCharacter, RSpeed);
 }
 
 void AC_WarriorCharacter::Jumpp() {
 	Jump();
 }
 
+bool AC_WarriorCharacter::UpdateFSpeed_Validate(float NewSpeed) {
+	return true;
+}
+void AC_WarriorCharacter::UpdateFSpeed_Implementation(float NewSpeed) {
+	FSpeed = NewSpeed;
+}
+
+bool AC_WarriorCharacter::UpdateRSpeed_Validate(float NewSpeed) {
+	return true;
+}
+void AC_WarriorCharacter::UpdateRSpeed_Implementation(float NewSpeed) {
+	RSpeed = NewSpeed;
+}

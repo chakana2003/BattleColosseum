@@ -14,6 +14,5 @@ class BATTLECOLOSSEUM_API UC_Lobby : public UUserWidget
 {
 	GENERATED_BODY()
 	
-
 	
 };

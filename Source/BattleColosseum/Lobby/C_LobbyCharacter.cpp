@@ -65,6 +65,7 @@ void AC_LobbyCharacter::MoveForward(float Value)
 	if (Value != 0.f) {
 		AddMovementInput(GetActorForwardVector(), Value);
 	}
+	UpdateFSpeed(Value);
 }
 
 void AC_LobbyCharacter::MoveRight(float Value)
@@ -72,6 +73,7 @@ void AC_LobbyCharacter::MoveRight(float Value)
 	if (Value != 0.f) {
 		AddMovementInput(GetActorRightVector(), Value);
 	}
+	UpdateRSpeed(Value);
 }
 
 bool AC_LobbyCharacter::ActiveSprint_Validate() {
@@ -115,7 +117,6 @@ void AC_LobbyCharacter::Tick(float DeltaTime)
 		// 캐릭터 무브먼트 컴포넌트의 Max Speed 값을 Ori_Speed로 바꿈
 		GetCharacterMovement()->MaxWalkSpeed = Ori_Speed;
 	}
-
 }
 
 void AC_LobbyCharacter::SetupPlayerInputComponent(UInputComponent * PlayerInputComponent)
@@ -141,9 +142,24 @@ void AC_LobbyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 
 	// Replicate to everyone
 	DOREPLIFETIME(AC_LobbyCharacter, IsSprinting);
+	DOREPLIFETIME(AC_LobbyCharacter, FSpeed);
+	DOREPLIFETIME(AC_LobbyCharacter, RSpeed);
 }
 
 void AC_LobbyCharacter::Jumpp() {
 	Jump();
 }
 
+bool AC_LobbyCharacter::UpdateFSpeed_Validate(float NewSpeed) {
+	return true;
+}
+void AC_LobbyCharacter::UpdateFSpeed_Implementation(float NewSpeed) {
+	FSpeed = NewSpeed;
+}
+
+bool AC_LobbyCharacter::UpdateRSpeed_Validate(float NewSpeed) {
+	return true;
+}
+void AC_LobbyCharacter::UpdateRSpeed_Implementation(float NewSpeed) {
+	RSpeed = NewSpeed;
+}
