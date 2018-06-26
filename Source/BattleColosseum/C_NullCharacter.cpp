@@ -19,8 +19,9 @@ AC_NullCharacter::AC_NullCharacter() {
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Springarm"));
 	UserID = CreateDefaultSubobject<UTextRenderComponent>(TEXT("UserID"));
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 
-	ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Sphere(TEXT("StaticMesh'/Game/Meshes/Cube.Cube'"));
+	ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Sphere(TEXT("StaticMesh'/Game/Meshes/SM_Cube.SM_Cube'"));
 
 	RootComponent = Box;
 	StaticMesh->AttachToComponent(Box, FAttachmentTransformRules::KeepRelativeTransform);

@@ -14,19 +14,15 @@
 
 
 AC_LobbyCharacter::AC_LobbyCharacter() {
-	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Body"));
-	Capsule = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Capsule"));
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	CharacterMovement = CreateDefaultSubobject<UCharacterMovementComponent>(TEXT("CharacterMovement"));
 	UserID = CreateDefaultSubobject<UTextRenderComponent>(TEXT("UserID"));
 
-	RootComponent = Capsule;
-	SkeletalMesh->SetupAttachment(Capsule);
-	SpringArm->AttachToComponent((USceneComponent*)Capsule, FAttachmentTransformRules::KeepRelativeTransform);
+	SpringArm->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	Camera->AttachToComponent(SpringArm, FAttachmentTransformRules::KeepRelativeTransform);
-	UserID->AttachToComponent(SkeletalMesh, FAttachmentTransformRules::KeepRelativeTransform);
+	UserID->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
 
-	SkeletalMesh->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -88.f), FRotator(0.f, -90.f, 0.f));
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -88.f), FRotator(0.f, -90.f, 0.f));
 
 	bReplicates = true;
 
@@ -45,17 +41,15 @@ AC_LobbyCharacter::AC_LobbyCharacter() {
 	SpringArm->CameraLagSpeed = 9.0f;
 	SpringArm->CameraRotationLagSpeed = 9.0f;
 
-	Capsule->SetNotifyRigidBodyCollision(true);  // hit 이벤트 활성화(옛날이름)
-	Capsule->SetCapsuleHalfHeight(88.f);
-	Capsule->SetCapsuleRadius(34.f);
+	GetCapsuleComponent()->SetNotifyRigidBodyCollision(true);  // hit 이벤트 활성화(옛날이름)
+	GetCapsuleComponent()->SetCapsuleHalfHeight(88.f);
+	GetCapsuleComponent()->SetCapsuleRadius(34.f);
 
 	UserID->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
 	UserID->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
 	UserID->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
-	UserID->SetText(TEXT("USER ID"));
+	UserID->SetText(FText::FromString(TEXT("UserID")));
 	UserID->SetIsReplicated(true);
-
-	CharacterMovement->Activate(true);
 }
 
 void AC_LobbyCharacter::BeginPlay()
@@ -71,6 +65,7 @@ void AC_LobbyCharacter::MoveForward(float Value)
 	if (Value != 0.f) {
 		AddMovementInput(GetActorForwardVector(), Value);
 	}
+	UpdateFSpeed(Value);
 }
 
 void AC_LobbyCharacter::MoveRight(float Value)
@@ -78,6 +73,7 @@ void AC_LobbyCharacter::MoveRight(float Value)
 	if (Value != 0.f) {
 		AddMovementInput(GetActorRightVector(), Value);
 	}
+	UpdateRSpeed(Value);
 }
 
 bool AC_LobbyCharacter::ActiveSprint_Validate() {
@@ -115,11 +111,11 @@ void AC_LobbyCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (IsSprinting) {
 		// 캐릭터 무브먼트 컴포넌트의 Max Speed 값을 Sprint_Speed로 바꿈
-		CharacterMovement->MaxWalkSpeed = Sprint_Speed;
+		GetCharacterMovement()->MaxWalkSpeed = Sprint_Speed;
 	}
 	else {
 		// 캐릭터 무브먼트 컴포넌트의 Max Speed 값을 Ori_Speed로 바꿈
-		CharacterMovement->MaxWalkSpeed = Ori_Speed;
+		GetCharacterMovement()->MaxWalkSpeed = Ori_Speed;
 	}
 }
 
@@ -146,9 +142,24 @@ void AC_LobbyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 
 	// Replicate to everyone
 	DOREPLIFETIME(AC_LobbyCharacter, IsSprinting);
+	DOREPLIFETIME(AC_LobbyCharacter, FSpeed);
+	DOREPLIFETIME(AC_LobbyCharacter, RSpeed);
 }
 
 void AC_LobbyCharacter::Jumpp() {
-	CharacterMovement->DoJump(true);
+	Jump();
 }
 
+bool AC_LobbyCharacter::UpdateFSpeed_Validate(float NewSpeed) {
+	return true;
+}
+void AC_LobbyCharacter::UpdateFSpeed_Implementation(float NewSpeed) {
+	FSpeed = NewSpeed;
+}
+
+bool AC_LobbyCharacter::UpdateRSpeed_Validate(float NewSpeed) {
+	return true;
+}
+void AC_LobbyCharacter::UpdateRSpeed_Implementation(float NewSpeed) {
+	RSpeed = NewSpeed;
+}

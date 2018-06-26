@@ -7,7 +7,6 @@
 
 UC_SaveGame::UC_SaveGame() {
 	SaveGameName = "SAVEGAME";
-	MyInfo = FC_S_PlayerInfo();
 }
 
 void UC_SaveGame::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
