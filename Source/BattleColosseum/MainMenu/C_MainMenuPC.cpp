@@ -33,26 +33,14 @@ void AC_MainMenuPC::Tick(float DeltaSecond) {
 	loopFloat = loopFloat + loopFloat*DeltaSecond;
 	if (loopFloat > 3.f) {
 		loopFloat = 0.01f;
-		if (CamOrder == 0) {
+		if (Cameras.Num() > CamOrder) {
+			SetViewTargetWithBlend(Cameras[CamOrder], 2.f, EViewTargetBlendFunction::VTBlend_EaseInOut, 5.f);
 			CamOrder++;
-			if (Cameras[0]) {
-				SetViewTargetWithBlend(Cameras[0], 1.f, EViewTargetBlendFunction::VTBlend_EaseIn, 1.f);
-			}
-		}
-		else if (CamOrder == 1) {
-			CamOrder++;
-			if (Cameras[1]) {
-				SetViewTargetWithBlend(Cameras[1], 1.f, EViewTargetBlendFunction::VTBlend_EaseIn, 1.f);
-			}
-		}
-		else if (CamOrder == 2) {
-			CamOrder = 0;
-			if (Cameras[2]) {
-				SetViewTargetWithBlend(Cameras[2], 1.f, EViewTargetBlendFunction::VTBlend_EaseIn, 1.f);
-			}
 		}
 		else {
 			CamOrder = 0;
+			SetViewTargetWithBlend(Cameras[CamOrder], 2.f, EViewTargetBlendFunction::VTBlend_EaseInOut, 5.f);
+			CamOrder++;
 		}
 	}
 }
