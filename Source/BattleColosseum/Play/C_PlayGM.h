@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "Engine/TriggerBox.h"
 #include "C_PlayGM.generated.h"
 
 /**
@@ -18,8 +19,7 @@ public: // 변수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	TArray<APlayerController*> ConnectedPlayerControllers;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class AC_SpawnBox* SpawnBox;
+	ATriggerBox* SpawnBox;
 
 public: // 함수
 

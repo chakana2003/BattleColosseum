@@ -3,7 +3,6 @@
 #include "C_PlayGM.h"
 #include "Kismet/GameplayStatics.h"
 #include "EngineUtils.h"
-#include "C_SpawnBox.h"
 #include "Lobby/C_LobbyPC.h"
 #include "Play/C_PlayPC.h"
 #include "UnrealNetwork.h"
@@ -12,6 +11,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "EngineGlobals.h"
 #include "Runtime/Engine/Classes/Engine/Engine.h"
+#include "Engine/TriggerBox.h"
+#include "Math/Box.h"
 
 
 AC_PlayGM::AC_PlayGM()
@@ -24,10 +25,10 @@ void AC_PlayGM::InitGame(const FString& MapName, const FString& Options, FString
 
 	UKismetSystemLibrary::PrintString(GetWorld(), TEXT("InitGame Call"), true, true, FLinearColor(1.f, 1.f, 1.f, 1.f), 10.f);
 	TArray<AActor*> outer;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AC_SpawnBox::StaticClass(), outer);
-	if (outer.GetData()) {
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("FirstSpawn"), outer);
+	if (outer[0]) {
 		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("1. Create SpawnBox"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
-		SpawnBox = Cast<AC_SpawnBox>(outer.Pop());
+		SpawnBox = Cast<ATriggerBox>(outer[0]);
 	}
 	else {
 		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("1-1. Not Create SpawnBox"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
@@ -47,6 +48,7 @@ void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerControll
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. Load Call"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 			Pawn->PassCharacterToServer(Pawn->MyInfo);
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. PassCharacterToServer Call"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%s is Possess Pawn Name of PlayPC - last"), *(NewPC->GetPawn()->GetName())));
 			ConnectedPlayerControllers.Add(NewPC);
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. ConnectedPlayer Array Add"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 		}
@@ -57,6 +59,7 @@ void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerControll
 	else {
 		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2-2. OldPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 	}
+
 }
 
 void AC_PlayGM::HandleSeamlessTravelPlayer(AController *& C)
@@ -87,6 +90,7 @@ void AC_PlayGM::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AC_PlayGM, ConnectedPlayerControllers);
+
 }
 
 void AC_PlayGM::PostSeamlessTravel()
@@ -126,7 +130,7 @@ void AC_PlayGM::SpawnCharacter_WaitTime_Implementation(APlayerController* PC, TS
 	}
 	if (SpawnBox) {
 		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("5. NewPawn Spawned!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
-		FVector RandPos = UKismetMathLibrary::RandomPointInBoundingBox(SpawnBox->GetActorLocation(), SpawnBox->BoxCompo->GetScaledBoxExtent());
+		FVector RandPos = UKismetMathLibrary::RandomPointInBoundingBox(SpawnBox->GetActorLocation(), SpawnBox->GetComponentsBoundingBox().GetExtent());
 		float Rando = UKismetMathLibrary::RandomFloatInRange(0.f, 360.f);
 		FQuat RandRot = FQuat(FRotator(0.f, Rando, 0.f));
 		
@@ -142,6 +146,7 @@ void AC_PlayGM::SpawnCharacter_WaitTime_Implementation(APlayerController* PC, TS
 			if (Pawn) {
 				UKismetSystemLibrary::PrintString(GetWorld(), TEXT("6. Possess Done"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 				PC->Possess(Pawn);
+				GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%s is Possess Pawn Name of PlayPC - 1"), *(PC->GetPawn()->GetName())));
 			}
 			else
 			{
@@ -151,8 +156,10 @@ void AC_PlayGM::SpawnCharacter_WaitTime_Implementation(APlayerController* PC, TS
 		else {
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("5-2. SpawnedAct is Invalid"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 		}
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%s is Possess Pawn Name of PlayPC - 2"), *(PC->GetPawn()->GetName())));
 	}
 	else {
 		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("5-1. Pawn does not Spawn(Because SpawnBox not Exist"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%s is Possess Pawn Name of PlayPC - 3"), *(PC->GetPawn()->GetName())));
 }
