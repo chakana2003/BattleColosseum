@@ -8,7 +8,7 @@
 
 
 void AC_PlayPC::Load() {
-	SaveGameRef = Cast<UC_SaveGame>(UGameplayStatics::LoadGameFromSlot(SaveGameRef->SaveGameName, 0));
+	SaveGameRef = Cast<UC_SaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("SAVEGAME"), 0));
 	if (SaveGameRef) {
 		MyInfo = SaveGameRef->MyInfo;
 	}
