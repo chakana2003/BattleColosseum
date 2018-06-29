@@ -38,4 +38,7 @@ public: // ÇÔ¼ö
 
 	virtual void SwapPlayerControllers(APlayerController * OldPC, APlayerController * NewPC) override;
 
+	UFUNCTION(BlueprintCallable)
+	void CallSpawn();
+
 };

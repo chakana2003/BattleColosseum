@@ -50,6 +50,19 @@ AC_WarriorCharacter::AC_WarriorCharacter() {
 	UserID->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
 	UserID->SetText(FText::FromString(TEXT("UserID")));
 	UserID->SetIsReplicated(true);
+	UserID->SetVisibility(false);
+
+	FPostProcessSettings NewProcessSetting;
+	NewProcessSetting.DepthOfFieldMethod = EDepthOfFieldMethod::DOFM_Gaussian;
+	NewProcessSetting.DepthOfFieldFocalDistance = 100.f;
+	NewProcessSetting.DepthOfFieldFocalRegion = 80000.f;
+	NewProcessSetting.bOverride_DepthOfFieldFocalDistance = true;
+	NewProcessSetting.bOverride_DepthOfFieldFocalRegion = true;
+	NewProcessSetting.bOverride_DepthOfFieldMethod = true;
+	NewProcessSetting.bOverride_DepthOfFieldFarBlurSize = true;
+	NewProcessSetting.DepthOfFieldFarBlurSize = 2.f;
+
+	Camera->PostProcessSettings = NewProcessSetting;
 }
 
 void AC_WarriorCharacter::BeginPlay()

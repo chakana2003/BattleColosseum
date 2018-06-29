@@ -13,8 +13,18 @@ UCLASS()
 class BATTLECOLOSSEUM_API AC_PlayGS : public AGameStateBase
 {
 	GENERATED_BODY()
-	
-	
-	
-	
+
+public: // 변수
+	float ms;
+	int sec;
+	int min;
+	int hour;
+
+	bool start;
+
+public: // 함수
+	AC_PlayGS();
+
+	virtual void Tick(float DeltaSeconds) override;
+
 };

@@ -30,4 +30,7 @@ public: // ÇÔ¼ö
 	
 	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
 	void PassCharacterToServer(FC_S_PlayerInfo NewInfo);
+
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+	void PossessingPawn(APawn* TargetPawn);
 };
