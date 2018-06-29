@@ -21,10 +21,17 @@ public: // 변수
 	int hour;
 
 	bool start;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_LeftTime)
+	float leftTime;
 
 public: // 함수
 	AC_PlayGS();
 
 	virtual void Tick(float DeltaSeconds) override;
+
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
+
+	UFUNCTION()
+	void OnRep_LeftTime();
 
 };

@@ -14,6 +14,8 @@
 #include "Engine/TriggerBox.h"
 #include "Math/Box.h"
 #include "Play/C_PlayGS.h"
+#include "Play/C_PlayGS.h"
+#include "TimerManager.h"
 
 
 AC_PlayGM::AC_PlayGM()
@@ -41,15 +43,16 @@ void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerControll
 	Super::SwapPlayerControllers(OldPC, NewPC);
 
 	UKismetSystemLibrary::PrintString(GetWorld(), TEXT("SwapPlayerControllers Call"), true, true, FLinearColor(1.f, 1.f, 1.f, 1.f), 10.f);
-	if (Cast<AC_LobbyPC>(OldPC)) {
-		AC_PlayPC* Pawn = Cast<AC_PlayPC>(NewPC);
-		if (Pawn) {
+	AC_LobbyPC* LobbyPC = Cast<AC_LobbyPC>(OldPC);
+	if (LobbyPC) {
+		AC_PlayPC* PlayPC = Cast<AC_PlayPC>(NewPC);
+		if (PlayPC) {
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. MyInfo Coppy"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
-			Pawn->Load();
+			PlayPC->MyInfo = LobbyPC->MyInfo;
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. Load Call"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 			ConnectedPlayerControllers.Add(NewPC);
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. ConnectedPlayer Array Add"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
-			Pawn->PassCharacterToServer(Pawn->MyInfo);
+			// PlayPC->PassCharacterToServer(PlayPC->MyInfo);
 		}
 		else {
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2-1. NewPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
@@ -58,7 +61,18 @@ void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerControll
 	else {
 		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2-2. OldPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 	}
+}
 
+void AC_PlayGM::BeginPlay()
+{
+	Super::BeginPlay();
+
+	GetWorldTimerManager().SetTimer(StartTimeHandle,
+		this,
+		&AC_PlayGM::StartTimer,
+		1.0f,
+		true,
+		0);
 }
 
 void AC_PlayGM::CallSpawn()
@@ -67,6 +81,54 @@ void AC_PlayGM::CallSpawn()
 		for (APlayerController* PC : ConnectedPlayerControllers) {
 			AC_PlayPC* PlayPC = Cast<AC_PlayPC>(PC);
 			PlayPC->PassCharacterToServer(PlayPC->MyInfo);
+		}
+	}
+}
+
+void AC_PlayGM::StartTimer()
+{
+	auto GS = GetGameState<AC_PlayGS>();
+
+	if (GS)
+	{
+		GS->leftTime--;
+		if (HasAuthority())
+		{
+			GS->OnRep_LeftTime();
+			if (GS->leftTime < 0)
+			{
+				GetWorldTimerManager().ClearTimer(StartTimeHandle);
+			}
+		}
+	}
+}
+
+void AC_PlayGM::YesSpawn()
+{
+	for (APlayerController* PC : ConnectedPlayerControllers) {
+		AC_PlayPC* PlayPC = Cast<AC_PlayPC>(PC);
+		if (PlayPC) {
+			if (PlayPC->GetPawn())
+			{
+				PlayPC->GetPawn()->Destroy();
+			}
+			FVector RandPos = UKismetMathLibrary::RandomPointInBoundingBox(SpawnBox->GetActorLocation(), SpawnBox->GetComponentsBoundingBox().GetExtent());
+			float Rando = UKismetMathLibrary::RandomFloatInRange(0.f, 360.f);
+			FQuat RandRot = FQuat(FRotator(0.f, Rando, 0.f));
+
+			
+
+			FTransform SpawnTransform;
+			SpawnTransform.SetRotation(RandRot);
+			SpawnTransform.SetLocation(RandPos);
+			SpawnTransform.SetScale3D(FVector(1.f));
+			AActor* SpawnedAct = GetWorld()->SpawnActor<APawn>(PlayPC->MyInfo.SelectCharacter.GameCharacter, SpawnTransform);
+			
+			APawn* Pawn = Cast<APawn>(SpawnedAct);
+			if (Pawn) {
+				UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+				PlayPC->PossessingPawn(Pawn);
+			}
 		}
 	}
 }
@@ -178,4 +240,11 @@ void AC_PlayGM::SpawnCharacter_WaitTime_Implementation(APlayerController* PC, TS
 		}
 	}
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%s is Possess Pawn Name of PlayPC - 3"), *(PC->GetPawn()->GetName())));
+}
+
+bool AC_PlayGM::RealStartGame_Validate() {
+	return true;
+}
+void AC_PlayGM::RealStartGame_Implementation() {
+
 }

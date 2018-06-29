@@ -24,6 +24,7 @@ public: // 변수
 
 public: // 함수
 
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
 	void Load();
 	
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
@@ -33,4 +34,6 @@ public: // 함수
 
 	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
 	void PossessingPawn(APawn* TargetPawn);
+
+	void StartGame();
 };

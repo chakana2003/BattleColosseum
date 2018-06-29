@@ -5,6 +5,9 @@
 #include "EngineGlobals.h"
 #include "Runtime/Engine/Classes/Engine/Engine.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "UnrealNetwork.h"
+#include "Kismet/GameplayStatics.h"
+#include "Play/C_PlayGM.h"
 
 
 AC_PlayGS::AC_PlayGS() {
@@ -13,6 +16,8 @@ AC_PlayGS::AC_PlayGS() {
 	sec = 0;
 	min = 0;
 	hour = 0;
+
+	leftTime = 10.f;
 }
 
 void AC_PlayGS::Tick(float DeltaSeconds){
@@ -34,3 +39,23 @@ void AC_PlayGS::Tick(float DeltaSeconds){
 		hour++;
 	}
 }
+
+void AC_PlayGS::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AC_PlayGS, leftTime);
+}
+
+void AC_PlayGS::OnRep_LeftTime()
+{
+	AC_PlayGM* GM = Cast<AC_PlayGM>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (GM) {
+		if (leftTime < 0.f) {
+			if (HasAuthority())
+			{
+				GM->YesSpawn();
+				GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("StartGame Call In PlayGS")));
+			}
+		}
+	}
+}
+

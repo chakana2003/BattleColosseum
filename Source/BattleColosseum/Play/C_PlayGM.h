@@ -21,6 +21,8 @@ public: // 변수
 
 	ATriggerBox* SpawnBox;
 
+	FTimerHandle StartTimeHandle;
+
 public: // 함수
 
 	AC_PlayGM();
@@ -38,7 +40,16 @@ public: // 함수
 
 	virtual void SwapPlayerControllers(APlayerController * OldPC, APlayerController * NewPC) override;
 
+	virtual void BeginPlay() override;
+
 	UFUNCTION(BlueprintCallable)
 	void CallSpawn();
 
+	UFUNCTION()
+	void StartTimer();
+
+	void YesSpawn();
+
+	UFUNCTION(Server, reliable, WithValidation)
+	void RealStartGame();
 };
