@@ -17,6 +17,8 @@
 #include "Play/C_PlayGS.h"
 #include "TimerManager.h"
 #include "Play/C_SpawnBox.h"
+#include "Play/King/C_KingPawn.h"
+#include "Play/Warrior/C_WarriorCharacter.h"
 
 
 AC_PlayGM::AC_PlayGM()
@@ -63,6 +65,7 @@ void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerControll
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. Load Call"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 			ConnectedPlayerControllers.Add(NewPC);
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. ConnectedPlayer Array Add"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+			SendCurrentPC(NewPC);
 			// PlayPC->PassCharacterToServer(PlayPC->MyInfo);  // 첨부터 스폰하면 안됨..
 		}
 		else {
@@ -102,13 +105,25 @@ void AC_PlayGM::StartTimer()
 
 	if (GS)
 	{
-		GS->leftTime--;
+		GS->LeftStartTime--;
+		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%f"),GS->LeftStartTime));
 		if (HasAuthority())
 		{
 			GS->OnRep_LeftTime();
-			if (GS->leftTime < 0 && !(GS->DoesStart))
+			if (GS->LeftStartTime < 0 && !(GS->DoesStart))
 			{
-				GS->leftTime = 30.f;
+				GS->LeftStartTime = 30.f;
+
+				for (auto PC : ConnectedPlayerControllers) {			// Pawn 변수 저장.
+					AC_WarriorCharacter* TempWarrior = Cast<AC_WarriorCharacter>(PC->GetPawn());
+					AC_KingPawn* TempKing = Cast<AC_KingPawn>(PC->GetPawn());
+					if (TempWarrior) {
+						Warriors.Add(TempWarrior);
+					}
+					else if (TempKing) {
+						King = TempKing;
+					}
+				}
 			}
 		}
 		if (GS->DoesStart) {
@@ -134,7 +149,7 @@ void AC_PlayGM::YesSpawn()
 			SpawnTransform.SetRotation(RandRot);
 			SpawnTransform.SetLocation(RandPos);
 			SpawnTransform.SetScale3D(FVector(1.f));
-			AActor* SpawnedAct = GetWorld()->SpawnActor<APawn>(PlayPC->MyInfo.SelectCharacter.GameCharacter, SpawnTransform);
+			AActor* SpawnedAct = GetWorld()->SpawnActor<APawn>(PlayPC->MyInfo.SelectCharacter.LobbyCharacter, SpawnTransform);
 			
 			APawn* Pawn = Cast<APawn>(SpawnedAct);
 			if (Pawn) {
@@ -258,9 +273,91 @@ bool AC_PlayGM::RealStartGame_Validate() {
 	return true;
 }
 void AC_PlayGM::RealStartGame_Implementation() {
-	// 캐릭터 위치 변경.
+	// 캐릭터 랜덤위치배열 얻기.
+	TArray<int> SuffleIndex = SetSpawnLocation();
+	UKismetSystemLibrary::PrintString(GetWorld(), TEXT("5-1. Pawn does not Spawn(Because SpawnBox not Exist"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
+
+	for (APlayerController* PC : ConnectedPlayerControllers) {
+		if (PC->GetPawn()) {
+			PC->GetPawn()->Destroy();
+		}
+	}
+	int yes = 0;		// 배열을 가르키는 변수.
+	for (APlayerController* PC : ConnectedPlayerControllers) {
+		AC_PlayPC* PlayPC = Cast<AC_PlayPC>(PC);
+		if (PlayPC) {
+				// 용병인지
+			AActor* SpawnedAct = GetWorld()->SpawnActor<APawn>(PlayPC->MyInfo.SelectCharacter.GameCharacter, SpawnBox->GetActorTransform());
+			AC_WarriorCharacter* SpawnWarrior = Cast<AC_WarriorCharacter>(SpawnedAct);
+			AC_KingPawn* SpawnKing = Cast<AC_KingPawn>(SpawnedAct);
+			if (SpawnWarrior) {
+				// StartBox 트랜스폼 생성.
+				FVector RandPos = UKismetMathLibrary::RandomPointInBoundingBox(StartBoxes[SuffleIndex[yes]]->GetActorLocation(), StartBoxes[SuffleIndex[yes]]->GetComponentsBoundingBox().GetExtent());
+				float Rando = UKismetMathLibrary::RandomFloatInRange(0.f, 360.f);
+				FQuat RandRot = FQuat(FRotator(0.f, Rando, 0.f));
+
+				FTransform SpawnTransform;
+				SpawnTransform.SetRotation(RandRot);
+				SpawnTransform.SetLocation(RandPos);
+				SpawnTransform.SetScale3D(FVector(1.f));
+
+				// 새로운 위치에 플레이어가 선택한 용병 Pawn 스폰
+				SpawnWarrior->SetActorTransform(SpawnTransform);
+
+				APawn* Pawn = Cast<APawn>(SpawnedAct);
+				if (Pawn) {
+				// 빙의
+					UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+					PlayPC->PossessingPawn(Pawn);
+				}
+			}	// 왕인지
+			else if(SpawnKing) {
+				// 가운데 왕 Pawn 스폰
+
+				// 빙의
+				UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+				PlayPC->PossessingPawn(SpawnKing);
+			}
+			yes++;
+		}
+	}
 }
 
-void AC_PlayGM::SetSpawnLocation() {
+TArray<int> AC_PlayGM::SetSpawnLocation() {
+	TArray<int> TempSuffle;
+	if (StartBoxes[0]) {
+		for (int i = 0; i < StartBoxes.Num(); i++) {
+			TempSuffle.Add(i);
+		}
 
+		for (int i = 0; i < 100; i++) {
+			int First = (int)FMath::FRandRange(0.f,(float)StartBoxes.Num());
+			int Second = (int)FMath::FRandRange(0.f, (float)StartBoxes.Num());
+			
+			int temp = TempSuffle[First];
+			
+			TempSuffle[First] = TempSuffle[Second];
+			TempSuffle[Second] = temp;
+		}
+
+		for (int i = 0; i < TempSuffle.Num(); i++) {
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("TempSuffle[%d] : %d"), i,TempSuffle[i]));
+		}
+		return TempSuffle;
+		//int yes = 0;										// 배열을 가르키는 변수.
+		//for (AC_WarriorCharacter* Warri : Warriors) {		// 워리어들의 위치를 지정하는 변수.
+		//	FVector RandPos = UKismetMathLibrary::RandomPointInBoundingBox(StartBoxes[TempSuffle[yes]]->GetActorLocation(), StartBoxes[TempSuffle[yes]]->GetComponentsBoundingBox().GetExtent());
+		//	float Rando = UKismetMathLibrary::RandomFloatInRange(0.f, 360.f);
+		//	FQuat RandRot = FQuat(FRotator(0.f, Rando, 0.f));
+
+		//	FTransform SpawnTransform;
+		//	SpawnTransform.SetRotation(RandRot);
+		//	SpawnTransform.SetLocation(RandPos);
+		//	SpawnTransform.SetScale3D(FVector(1.f));
+
+		//	Warri->SetActorTransform(SpawnTransform);
+		//	++yes;
+		//}
+	}
+	return TempSuffle;
 }

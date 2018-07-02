@@ -20,10 +20,12 @@ public: // 변수
 	int min;
 	int hour;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	bool PreStart;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	bool DoesStart;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_LeftTime)
-	float leftTime;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_LeftTime)
+	float LeftStartTime;
 
 public: // 함수
 	AC_PlayGS();

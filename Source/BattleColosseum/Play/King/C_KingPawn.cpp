@@ -20,6 +20,8 @@ AC_KingPawn::AC_KingPawn()
 	Camera->SetupAttachment(RootComponent);
 	PrimaryActorTick.bCanEverTick = true;
 	CastArrow->SetupAttachment(Camera);
+
+	Tags.Add(TEXT("King"));
 	
 	// 생성자에서는 Controller 가 없기 때문에 NULL 을 반환해서 크러쉬 발생 - 에디터 강제종료
 

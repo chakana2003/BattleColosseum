@@ -63,6 +63,8 @@ AC_WarriorCharacter::AC_WarriorCharacter() {
 	NewProcessSetting.DepthOfFieldFarBlurSize = 2.f;
 
 	Camera->PostProcessSettings = NewProcessSetting;
+
+	Tags.Add(TEXT("Warrior"));
 }
 
 void AC_WarriorCharacter::BeginPlay()
