@@ -16,6 +16,7 @@
 #include "Play/C_PlayGS.h"
 #include "Play/C_PlayGS.h"
 #include "TimerManager.h"
+#include "Play/C_SpawnBox.h"
 
 
 AC_PlayGM::AC_PlayGM()
@@ -36,6 +37,16 @@ void AC_PlayGM::InitGame(const FString& MapName, const FString& Options, FString
 	else {
 		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("1-1. Not Create SpawnBox"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 	}
+
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("StartBox"), outer);	// 시작 위치 지정 박스 스폰 및 할당.
+	if (outer[0]) {
+		for (AActor* out : outer) {
+			ATriggerBox* TB = Cast<ATriggerBox>(out);
+			if (TB) {
+				StartBoxes.Add(TB);
+			}
+		}
+	}
 }
 
 void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerController * NewPC)
@@ -52,7 +63,7 @@ void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerControll
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. Load Call"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 			ConnectedPlayerControllers.Add(NewPC);
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. ConnectedPlayer Array Add"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
-			// PlayPC->PassCharacterToServer(PlayPC->MyInfo);
+			// PlayPC->PassCharacterToServer(PlayPC->MyInfo);  // 첨부터 스폰하면 안됨..
 		}
 		else {
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2-1. NewPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
@@ -95,10 +106,13 @@ void AC_PlayGM::StartTimer()
 		if (HasAuthority())
 		{
 			GS->OnRep_LeftTime();
-			if (GS->leftTime < 0)
+			if (GS->leftTime < 0 && !(GS->DoesStart))
 			{
-				GetWorldTimerManager().ClearTimer(StartTimeHandle);
+				GS->leftTime = 30.f;
 			}
+		}
+		if (GS->DoesStart) {
+			GetWorldTimerManager().ClearTimer(StartTimeHandle);
 		}
 	}
 }
@@ -115,8 +129,6 @@ void AC_PlayGM::YesSpawn()
 			FVector RandPos = UKismetMathLibrary::RandomPointInBoundingBox(SpawnBox->GetActorLocation(), SpawnBox->GetComponentsBoundingBox().GetExtent());
 			float Rando = UKismetMathLibrary::RandomFloatInRange(0.f, 360.f);
 			FQuat RandRot = FQuat(FRotator(0.f, Rando, 0.f));
-
-			
 
 			FTransform SpawnTransform;
 			SpawnTransform.SetRotation(RandRot);
@@ -246,5 +258,9 @@ bool AC_PlayGM::RealStartGame_Validate() {
 	return true;
 }
 void AC_PlayGM::RealStartGame_Implementation() {
+	// 캐릭터 위치 변경.
+}
+
+void AC_PlayGM::SetSpawnLocation() {
 
 }

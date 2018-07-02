@@ -21,6 +21,8 @@ public: // 변수
 
 	ATriggerBox* SpawnBox;
 
+	TArray<ATriggerBox*> StartBoxes;
+
 	FTimerHandle StartTimeHandle;
 
 public: // 함수
@@ -52,4 +54,6 @@ public: // 함수
 
 	UFUNCTION(Server, reliable, WithValidation)
 	void RealStartGame();
+
+	void SetSpawnLocation();
 };

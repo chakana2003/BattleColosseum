@@ -11,7 +11,9 @@
 
 
 AC_PlayGS::AC_PlayGS() {
-	start = false;
+
+	PreStart = false;
+	DoesStart = false;
 	ms = 0.f;
 	sec = 0;
 	min = 0;
@@ -43,19 +45,33 @@ void AC_PlayGS::Tick(float DeltaSeconds){
 void AC_PlayGS::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AC_PlayGS, leftTime);
+	DOREPLIFETIME(AC_PlayGS, DoesStart);
+	DOREPLIFETIME(AC_PlayGS, PreStart);
 }
 
 void AC_PlayGS::OnRep_LeftTime()
 {
-	AC_PlayGM* GM = Cast<AC_PlayGM>(UGameplayStatics::GetGameMode(GetWorld()));
-	if (GM) {
-		if (leftTime < 0.f) {
-			if (HasAuthority())
-			{
-				GM->YesSpawn();
-				GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("StartGame Call In PlayGS")));
+	if (HasAuthority()) {
+		AC_PlayGM* GM = Cast<AC_PlayGM>(UGameplayStatics::GetGameMode(GetWorld()));
+		if (GM) {
+			if (leftTime < 0.f) {
+				if(!PreStart)			// 맨 처음 캐릭터 스폰할 때
+				{
+					GM->YesSpawn();
+					PreStart = true;
+					GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("PreStart Turn True!")));
+				}
+				else if (!DoesStart)	// 진짜 게임 시작.
+				{
+					DoesStart = true;
+					
+					GM->RealStartGame();
+
+					GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("DoesStart  Trun True!")));
+				}
 			}
 		}
 	}
+	
 }
 

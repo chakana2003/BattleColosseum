@@ -20,7 +20,8 @@ public: // º¯¼ö
 	int min;
 	int hour;
 
-	bool start;
+	bool PreStart;
+	bool DoesStart;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_LeftTime)
 	float leftTime;
 
