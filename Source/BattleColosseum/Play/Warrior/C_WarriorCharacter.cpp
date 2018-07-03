@@ -28,7 +28,7 @@ AC_WarriorCharacter::AC_WarriorCharacter() {
 
 	// 변수 초기화
 	IsSprinting = false;
-	SprintRate = 100.f;
+	SprintRate = 2.f;
 	RightView = false;
 
 	this->bUseControllerRotationPitch = false;				// 플레이어가 위아래로 돌아가지 않도록
@@ -50,6 +50,21 @@ AC_WarriorCharacter::AC_WarriorCharacter() {
 	UserID->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
 	UserID->SetText(FText::FromString(TEXT("UserID")));
 	UserID->SetIsReplicated(true);
+	UserID->SetVisibility(false);
+
+	FPostProcessSettings NewProcessSetting;
+	NewProcessSetting.DepthOfFieldMethod = EDepthOfFieldMethod::DOFM_Gaussian;
+	NewProcessSetting.DepthOfFieldFocalDistance = 100.f;
+	NewProcessSetting.DepthOfFieldFocalRegion = 80000.f;
+	NewProcessSetting.bOverride_DepthOfFieldFocalDistance = true;
+	NewProcessSetting.bOverride_DepthOfFieldFocalRegion = true;
+	NewProcessSetting.bOverride_DepthOfFieldMethod = true;
+	NewProcessSetting.bOverride_DepthOfFieldFarBlurSize = true;
+	NewProcessSetting.DepthOfFieldFarBlurSize = 2.f;
+
+	Camera->PostProcessSettings = NewProcessSetting;
+
+	Tags.Add(TEXT("Warrior"));
 }
 
 void AC_WarriorCharacter::BeginPlay()
@@ -65,6 +80,7 @@ void AC_WarriorCharacter::MoveForward(float Value)
 	if (Value != 0.f) {
 		AddMovementInput(GetActorForwardVector(), Value);
 	}
+	UpdateFSpeed(Value);
 }
 
 void AC_WarriorCharacter::MoveRight(float Value)
@@ -72,6 +88,7 @@ void AC_WarriorCharacter::MoveRight(float Value)
 	if (Value != 0.f) {
 		AddMovementInput(GetActorRightVector(), Value);
 	}
+	UpdateRSpeed(Value);
 }
 
 bool AC_WarriorCharacter::ActiveSprint_Validate() {
@@ -141,9 +158,24 @@ void AC_WarriorCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 
 	// Replicate to everyone
 	DOREPLIFETIME(AC_WarriorCharacter, IsSprinting);
+	DOREPLIFETIME(AC_WarriorCharacter, FSpeed);
+	DOREPLIFETIME(AC_WarriorCharacter, RSpeed);
 }
 
 void AC_WarriorCharacter::Jumpp() {
 	Jump();
 }
 
+bool AC_WarriorCharacter::UpdateFSpeed_Validate(float NewSpeed) {
+	return true;
+}
+void AC_WarriorCharacter::UpdateFSpeed_Implementation(float NewSpeed) {
+	FSpeed = NewSpeed;
+}
+
+bool AC_WarriorCharacter::UpdateRSpeed_Validate(float NewSpeed) {
+	return true;
+}
+void AC_WarriorCharacter::UpdateRSpeed_Implementation(float NewSpeed) {
+	RSpeed = NewSpeed;
+}

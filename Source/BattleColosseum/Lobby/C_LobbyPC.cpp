@@ -7,3 +7,7 @@ void AC_LobbyPC::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 {
 	DOREPLIFETIME(AC_LobbyPC, MyInfo);
 }
+
+void AC_LobbyPC::BeginPlay() {
+	SetInputMode(FInputModeGameAndUI());
+}

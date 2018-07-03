@@ -16,7 +16,7 @@ public:
 	AC_WarriorCharacter();
 
 	// 변수
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		class USpringArmComponent* SpringArm;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 		class UTextRenderComponent* UserID;
@@ -38,6 +38,10 @@ public:
 	// Look Over Right Shoulder, 오른쪽어깨로 보고있니. 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Code")
 		bool RightView;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Code", Replicated)
+		float FSpeed;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Code", Replicated)
+		float RSpeed;
 
 public: // 함수
 
@@ -54,6 +58,10 @@ public: // 함수
 		void DeActiveSprint();								// 뛰기 비활성화
 	UFUNCTION()
 		void SwitchView();
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+		void UpdateFSpeed(float NewSpeed);
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+		void UpdateRSpeed(float NewSpeed);
 
 public:
 	// Called every frame

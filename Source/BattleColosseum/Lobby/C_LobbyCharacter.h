@@ -39,7 +39,11 @@ public: // 변수
 		float Sprint_Speed;
 	// Look Over Right Shoulder, 오른쪽어깨로 보고있니. 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Code")
-		bool RightView;
+	bool RightView;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Code", Replicated)
+	float FSpeed;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Code", Replicated)
+	float RSpeed;
 
 public: // 함수
 
@@ -47,13 +51,17 @@ public: // 함수
 
 	// 입력 관련 행동 함수
 	UFUNCTION(BlueprintCallable)
-		void MoveForward(float Value);						// 앞으로 가기
+	void MoveForward(float Value);						// 앞으로 가기
 	UFUNCTION(BlueprintCallable)
-		void MoveRight(float Value);						// 옆으로 가기
+	void MoveRight(float Value);						// 옆으로 가기
 	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
-		void ActiveSprint();								// 뛰기 활성화
+	void ActiveSprint();								// 뛰기 활성화
 	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
-		void DeActiveSprint();								// 뛰기 비활성화
+	void DeActiveSprint();								// 뛰기 비활성화
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+	void UpdateFSpeed(float NewSpeed);
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+	void UpdateRSpeed(float NewSpeed);
 	UFUNCTION()
 		void SwitchView();
 

@@ -15,7 +15,15 @@ class BATTLECOLOSSEUM_API AC_MainMenuPC : public APlayerController
 	GENERATED_BODY()
 
 public:
-	
+	class TArray<ACameraActor*> Cameras;
+
+	int CamOrder;
+
+	float loopFloat;
+
 public:
-	
+
+	virtual void BeginPlay() override;
+
+	virtual void Tick(float DeltaSecond) override;
 };

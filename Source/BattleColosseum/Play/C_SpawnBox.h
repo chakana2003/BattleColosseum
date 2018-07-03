@@ -3,16 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
-#include "C_Lobby.generated.h"
+#include "Engine/TriggerBox.h"
+#include "C_SpawnBox.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class BATTLECOLOSSEUM_API UC_Lobby : public UUserWidget
+class BATTLECOLOSSEUM_API AC_SpawnBox : public ATriggerBox
 {
 	GENERATED_BODY()
-	
 	
 };
