@@ -24,10 +24,16 @@ public: // 변수
 
 public: // 함수
 
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
 	void Load();
 	
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	
 	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
 	void PassCharacterToServer(FC_S_PlayerInfo NewInfo);
+
+	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+	void PossessingPawn(APawn* TargetPawn);
+
+	void StartGame();
 };

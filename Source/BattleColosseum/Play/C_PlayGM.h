@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "Engine/TriggerBox.h"
+#include "Play/King/C_KingPawn.h"
+#include "Play/Warrior/C_WarriorCharacter.h"
 #include "C_PlayGM.generated.h"
 
 /**
@@ -19,7 +21,14 @@ public: // 변수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	TArray<APlayerController*> ConnectedPlayerControllers;
 
-	ATriggerBox* SpawnBox;
+	TArray<AC_WarriorCharacter*> Warriors;
+	class AC_KingPawn* King;
+
+	class ATriggerBox* SpawnBox;
+
+	TArray<ATriggerBox*> StartBoxes;
+
+	FTimerHandle StartTimeHandle;
 
 public: // 함수
 
@@ -38,4 +47,21 @@ public: // 함수
 
 	virtual void SwapPlayerControllers(APlayerController * OldPC, APlayerController * NewPC) override;
 
+	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	void CallSpawn();
+
+	UFUNCTION()
+	void StartTimer();
+
+	void YesSpawn();
+
+	UFUNCTION(Server, reliable, WithValidation)
+	void RealStartGame();
+
+	TArray<int> SetSpawnLocation();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SendCurrentPC(APlayerController* Player);
 };

@@ -28,7 +28,7 @@ AC_WarriorCharacter::AC_WarriorCharacter() {
 
 	// 변수 초기화
 	IsSprinting = false;
-	SprintRate = 100.f;
+	SprintRate = 2.f;
 	RightView = false;
 
 	this->bUseControllerRotationPitch = false;				// 플레이어가 위아래로 돌아가지 않도록
@@ -50,6 +50,21 @@ AC_WarriorCharacter::AC_WarriorCharacter() {
 	UserID->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
 	UserID->SetText(FText::FromString(TEXT("UserID")));
 	UserID->SetIsReplicated(true);
+	UserID->SetVisibility(false);
+
+	FPostProcessSettings NewProcessSetting;
+	NewProcessSetting.DepthOfFieldMethod = EDepthOfFieldMethod::DOFM_Gaussian;
+	NewProcessSetting.DepthOfFieldFocalDistance = 100.f;
+	NewProcessSetting.DepthOfFieldFocalRegion = 80000.f;
+	NewProcessSetting.bOverride_DepthOfFieldFocalDistance = true;
+	NewProcessSetting.bOverride_DepthOfFieldFocalRegion = true;
+	NewProcessSetting.bOverride_DepthOfFieldMethod = true;
+	NewProcessSetting.bOverride_DepthOfFieldFarBlurSize = true;
+	NewProcessSetting.DepthOfFieldFarBlurSize = 2.f;
+
+	Camera->PostProcessSettings = NewProcessSetting;
+
+	Tags.Add(TEXT("Warrior"));
 }
 
 void AC_WarriorCharacter::BeginPlay()
