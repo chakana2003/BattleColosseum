@@ -81,6 +81,7 @@ void AC_PlayGM::BeginPlay()
 {
 	Super::BeginPlay();
 
+	BeginStartTimer();
 	GetWorldTimerManager().SetTimer(StartTimeHandle,
 		this,
 		&AC_PlayGM::StartTimer,
@@ -109,6 +110,7 @@ void AC_PlayGM::StartTimer()
 		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%f"),GS->LeftStartTime));
 		if (HasAuthority())
 		{
+			PopStartTimer();
 			GS->OnRep_LeftTime();
 			if (GS->LeftStartTime < 0 && !(GS->DoesStart))
 			{
@@ -128,6 +130,7 @@ void AC_PlayGM::StartTimer()
 		}
 		if (GS->DoesStart) {
 			GetWorldTimerManager().ClearTimer(StartTimeHandle);
+			EndStartTimer();
 		}
 	}
 }

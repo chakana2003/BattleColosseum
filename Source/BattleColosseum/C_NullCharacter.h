@@ -45,4 +45,10 @@ public: // ÇÔ¼ö
 	void ForceD();
 	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
 	void JumpHigh();
+
+	void LookUp(float Val);
+
+	void Turn(float Val);
 };
+
+

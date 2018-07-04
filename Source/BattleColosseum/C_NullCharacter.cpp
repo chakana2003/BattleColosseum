@@ -68,6 +68,7 @@ AC_NullCharacter::AC_NullCharacter() {
 	UserID->XScale = 5.f;
 	UserID->YScale = 5.f;
 	UserID->SetIsReplicated(true);
+
 }
 
 void AC_NullCharacter::SetupPlayerInputComponent(UInputComponent * PlayerInputComponent)
@@ -79,6 +80,17 @@ void AC_NullCharacter::SetupPlayerInputComponent(UInputComponent * PlayerInputCo
 	PlayerInputComponent->BindAction("K_ImpactA", IE_Pressed, this, &AC_NullCharacter::ForceA);
 	PlayerInputComponent->BindAction("K_ImpactD", IE_Pressed, this, &AC_NullCharacter::ForceD);
 	PlayerInputComponent->BindAction("K_Jump", IE_Pressed, this, &AC_NullCharacter::JumpHigh);
+
+	PlayerInputComponent->BindAxis("K_LookUp", this, &AC_NullCharacter::LookUp);
+	PlayerInputComponent->BindAxis("K_Turn", this, &AC_NullCharacter::Turn);
+}
+
+void AC_NullCharacter::LookUp(float Val) {
+	SpringArm->AddRelativeRotation(FRotator(Val, 0.f, 0.f));
+}
+
+void AC_NullCharacter::Turn(float Val) {
+	SpringArm->AddRelativeRotation(FRotator(0.f, Val, 0.f));
 }
 
 bool AC_NullCharacter::ForceW_Validate() {
