@@ -309,6 +309,7 @@ void AC_PlayGM::RealStartGame_Implementation() {
 				// ºùÀÇ
 					UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 					PlayPC->PossessingPawn(Pawn);
+					SendWarriorFromCode(PC);
 				}
 			}	// ¿ÕÀÎÁö
 			else if(SpawnKing) {

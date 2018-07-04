@@ -64,4 +64,7 @@ public: // ÇÔ¼ö
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void SendCurrentPC(APlayerController* Player);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SendWarriorFromCode(APlayerController* Player);
 };
