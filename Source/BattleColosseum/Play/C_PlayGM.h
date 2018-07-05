@@ -28,7 +28,10 @@ public: // 변수
 
 	TArray<ATriggerBox*> StartBoxes;
 
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	FTimerHandle StartTimeHandle;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FTimerHandle CountdownTimeH;
 
 public: // 함수
 
@@ -64,4 +67,16 @@ public: // 함수
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void SendCurrentPC(APlayerController* Player);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SendWarriorFromCode(APlayerController* Player);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void BeginStartTimer();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PopStartTimer();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void EndStartTimer();
 };
