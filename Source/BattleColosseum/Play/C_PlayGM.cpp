@@ -81,13 +81,13 @@ void AC_PlayGM::BeginPlay()
 {
 	Super::BeginPlay();
 
-	BeginStartTimer();
 	GetWorldTimerManager().SetTimer(StartTimeHandle,
 		this,
 		&AC_PlayGM::StartTimer,
 		1.0f,
 		true,
 		0);
+	GetWorldTimerManager().SetTimer(CountdownTimeH, this, &AC_PlayGM::BeginStartTimer, 5.0f, false);
 }
 
 void AC_PlayGM::CallSpawn()
@@ -106,25 +106,20 @@ void AC_PlayGM::StartTimer()
 
 	if (GS)
 	{
-		GS->LeftStartTime--;
 		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%f"),GS->LeftStartTime));
-		if (HasAuthority())
+		PopStartTimer();
+		GS->OnRep_LeftTime();
+		if (GS->LeftStartTime < 0 && !(GS->DoesStart))
 		{
-			PopStartTimer();
-			GS->OnRep_LeftTime();
-			if (GS->LeftStartTime < 0 && !(GS->DoesStart))
-			{
-				GS->LeftStartTime = 30.f;
-
-				for (auto PC : ConnectedPlayerControllers) {			// Pawn 변수 저장.
-					AC_WarriorCharacter* TempWarrior = Cast<AC_WarriorCharacter>(PC->GetPawn());
-					AC_KingPawn* TempKing = Cast<AC_KingPawn>(PC->GetPawn());
-					if (TempWarrior) {
-						Warriors.Add(TempWarrior);
-					}
-					else if (TempKing) {
-						King = TempKing;
-					}
+			GS->LeftStartTime = 30.f;
+			for (auto PC : ConnectedPlayerControllers) {			// Pawn 변수 저장.
+				AC_WarriorCharacter* TempWarrior = Cast<AC_WarriorCharacter>(PC->GetPawn());
+				AC_KingPawn* TempKing = Cast<AC_KingPawn>(PC->GetPawn());
+				if (TempWarrior) {
+					Warriors.Add(TempWarrior);
+				}
+				else if (TempKing) {
+					King = TempKing;
 				}
 			}
 		}
@@ -132,7 +127,11 @@ void AC_PlayGM::StartTimer()
 			GetWorldTimerManager().ClearTimer(StartTimeHandle);
 			EndStartTimer();
 		}
+
+		GS->LeftStartTime--;
 	}
+
+	
 }
 
 void AC_PlayGM::YesSpawn()

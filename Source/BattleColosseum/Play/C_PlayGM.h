@@ -30,6 +30,8 @@ public: // 변수
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	FTimerHandle StartTimeHandle;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FTimerHandle CountdownTimeH;
 
 public: // 함수
 
