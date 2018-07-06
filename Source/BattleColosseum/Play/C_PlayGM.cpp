@@ -364,3 +364,10 @@ TArray<int> AC_PlayGM::SetSpawnLocation() {
 	}
 	return TempSuffle;
 }
+
+void AC_PlayGM::PreLogin(const FString & Options, const FString & Address, const FUniqueNetIdRepl & UniqueId, FString & ErrorMessage)
+{
+	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
+
+	ErrorMessage = TEXT("Nop");
+}

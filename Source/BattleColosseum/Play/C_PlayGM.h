@@ -80,4 +80,6 @@ public: // ÇÔ¼ö
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void EndStartTimer();
+
+	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage);
 };
