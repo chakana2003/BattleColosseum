@@ -15,9 +15,13 @@ class BATTLECOLOSSEUM_API AC_PlayGS : public AGameStateBase
 	GENERATED_BODY()
 
 public: // º¯¼ö
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	float ms;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	int sec;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	int min;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	int hour;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)

@@ -21,8 +21,6 @@ public: // 변수
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class USpringArmComponent* SpringArm;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	class UTextRenderComponent* UserID;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UCameraComponent* Camera;
 
 	// RunningState, 뛰기 불리언.

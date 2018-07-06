@@ -47,6 +47,10 @@ void AC_PlayGS::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 	DOREPLIFETIME(AC_PlayGS, LeftStartTime);
 	DOREPLIFETIME(AC_PlayGS, DoesStart);
 	DOREPLIFETIME(AC_PlayGS, PreStart);
+	DOREPLIFETIME(AC_PlayGS, ms);
+	DOREPLIFETIME(AC_PlayGS, sec);
+	DOREPLIFETIME(AC_PlayGS, min);
+	DOREPLIFETIME(AC_PlayGS, hour);
 }
 
 void AC_PlayGS::OnRep_LeftTime()

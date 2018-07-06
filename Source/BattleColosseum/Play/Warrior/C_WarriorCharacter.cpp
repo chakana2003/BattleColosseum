@@ -38,8 +38,8 @@ AC_WarriorCharacter::AC_WarriorCharacter() {
 	SpringArm->TargetArmLength = 150.f;						// 카메라 거리 가깝게 설정
 	SpringArm->bEnableCameraLag = true;
 	SpringArm->bEnableCameraRotationLag = true;
-	SpringArm->CameraLagSpeed = 9.0f;
-	SpringArm->CameraRotationLagSpeed = 9.0f;
+	SpringArm->CameraLagSpeed = 15.0f;
+	SpringArm->CameraRotationLagSpeed = 15.0f;
 
 	GetCapsuleComponent()->SetNotifyRigidBodyCollision(true);  // hit 이벤트 활성화(옛날이름)
 	GetCapsuleComponent()->SetCapsuleHalfHeight(88.f);

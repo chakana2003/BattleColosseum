@@ -20,8 +20,9 @@ class BATTLECOLOSSEUM_API AC_PlayGM : public AGameModeBase
 public: // º¯¼ö
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	TArray<APlayerController*> ConnectedPlayerControllers;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<AC_WarriorCharacter*> Warriors;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class AC_KingPawn* King;
 
 	class ATriggerBox* SpawnBox;
