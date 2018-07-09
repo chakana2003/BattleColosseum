@@ -32,7 +32,9 @@ public: // 변수
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	FTimerHandle StartTimeHandle;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	FTimerHandle CountdownTimeH;
+	FTimerHandle CountdownTimeHandle;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FTimerHandle GameTimeHandle;
 
 public: // 함수
 
@@ -57,12 +59,12 @@ public: // 함수
 	void CallSpawn();
 
 	UFUNCTION()
-	void StartTimer();
+	void CountdownTimer();
 
-	void YesSpawn();
+	void YesSpawn();		// 로비 캐릭터 생성 함수.
 
 	UFUNCTION(Server, reliable, WithValidation)
-	void RealStartGame();
+	void RealStartGame();	// 실제 게임캐릭터 생성 함수. 
 
 	TArray<int> SetSpawnLocation();
 
@@ -82,4 +84,6 @@ public: // 함수
 	void EndStartTimer();
 
 	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage);
+
+	void GameTime();
 };

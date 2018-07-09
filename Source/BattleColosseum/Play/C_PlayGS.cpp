@@ -20,6 +20,8 @@ AC_PlayGS::AC_PlayGS() {
 	hour = 0;
 
 	LeftStartTime = 10.f;
+
+	WaitForDeleteArea = false;
 }
 
 void AC_PlayGS::Tick(float DeltaSeconds){
@@ -51,6 +53,7 @@ void AC_PlayGS::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 	DOREPLIFETIME(AC_PlayGS, sec);
 	DOREPLIFETIME(AC_PlayGS, min);
 	DOREPLIFETIME(AC_PlayGS, hour);
+	DOREPLIFETIME(AC_PlayGS, WaitForDeleteArea);
 }
 
 void AC_PlayGS::OnRep_LeftTime()
@@ -75,4 +78,21 @@ void AC_PlayGS::OnRep_LeftTime()
 			}
 		}
 	}
+}
+
+void AC_PlayGS::TimeIncrese() {
+	if (ms >= 100.f) {
+		ms = 0;
+		sec++;
+		if (sec >= 60) {
+			sec = 0;
+			min++;
+			if (min >= 60) {
+				min = 0;
+				hour++;
+			}
+		}
+	}
+
+	// 지역 제한 확인
 }

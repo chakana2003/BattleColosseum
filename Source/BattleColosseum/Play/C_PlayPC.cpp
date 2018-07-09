@@ -64,3 +64,10 @@ void AC_PlayPC::PossessingPawn_Implementation(APawn* TargetPawn) {
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("%s is TargetPawn - 1"), *(TargetPawn->GetName())));
 	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("%s is Possess Pawn Name of PlayPC - 1"), *(GetPawn()->GetName())));
 }
+
+bool AC_PlayPC::CopyInfo_Validate(FC_S_PlayerInfo NewInfo) {
+	return true;
+}
+void AC_PlayPC::CopyInfo_Implementation(FC_S_PlayerInfo NewInfo) {
+	MyInfo = NewInfo;
+}
