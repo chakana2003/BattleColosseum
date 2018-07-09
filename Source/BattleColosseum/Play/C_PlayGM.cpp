@@ -54,6 +54,44 @@ void AC_PlayGM::InitGame(const FString& MapName, const FString& Options, FString
 			}
 		}
 	}
+
+	// BurningArea 를 할당.
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("BurningArea"), outer);
+	if (outer[0]) {
+		for (AActor* out : outer) {
+			AC_BurningArea* BA = Cast<AC_BurningArea>(out);
+			if (BA) {
+				BurningAreas.Add(BA);
+			}
+		}
+
+		// 0 번이 첫번째 내려오는 BurningArea
+		TArray<int> TempOrder;
+		for (int i = 0; i < BurningAreas.Num(); i++) {
+			TempOrder.Add(i);
+		}
+
+		for (int i = 0; i < 100; i++) {
+			int First = (int)FMath::FRandRange(0.f, (float)StartBoxes.Num());
+			int Second = (int)FMath::FRandRange(0.f, (float)StartBoxes.Num());
+
+			int temp = TempOrder[First];
+
+			TempOrder[First] = TempOrder[Second];
+			TempOrder[Second] = temp;
+		}
+
+		for (int i = 0; i < BurningAreas.Num(); i++) {
+			for (AC_BurningArea* BA : BurningAreas) {
+				if (BA->ActorHasTag(FName(*FString::FromInt(i)))) {
+					BA->MyOrder = TempOrder[i];
+					break;
+				}
+				
+			}
+		}
+
+	}
 }
 
 void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerController * NewPC)
@@ -410,4 +448,15 @@ void AC_PlayGM::GameTime() {
 	if (GS) {
 		GS->ms++;
 	}
+}
+
+void AC_PlayGM::StartBurning()
+{
+	// 배열을 가져온다.
+
+	// 첫번째 순서에 있는 BurningArea 활성화.
+
+	// 두번째 순서에 있는 BruningArea 활성화.
+
+	// 이미 활성화 되어있는 BrunignArea 를 더 강하게 만든다.
 }

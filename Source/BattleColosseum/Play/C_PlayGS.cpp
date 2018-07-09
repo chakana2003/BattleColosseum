@@ -95,4 +95,15 @@ void AC_PlayGS::TimeIncrese() {
 	}
 
 	// 지역 제한 확인
+	if (HasAuthority()) {
+		AC_PlayGM* GM = Cast<AC_PlayGM>(UGameplayStatics::GetGameMode(GetWorld()));
+		if (GM) {
+			// 0분째가 아닐 때, 4분마다 지역 제한.
+			if (min = !0 && min % 4 == 0) {
+				GM->StartBurning();
+			}
+		}
+	}
+	
+	
 }

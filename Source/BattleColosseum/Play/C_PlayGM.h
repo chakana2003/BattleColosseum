@@ -7,6 +7,7 @@
 #include "Engine/TriggerBox.h"
 #include "Play/King/C_KingPawn.h"
 #include "Play/Warrior/C_WarriorCharacter.h"
+#include "Play/C_BurningArea.h"
 #include "C_PlayGM.generated.h"
 
 /**
@@ -35,6 +36,8 @@ public: // 변수
 	FTimerHandle CountdownTimeHandle;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FTimerHandle GameTimeHandle;
+
+	TArray<AC_BurningArea*> BurningAreas;
 
 public: // 함수
 
@@ -86,4 +89,6 @@ public: // 함수
 	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage);
 
 	void GameTime();
+
+	void StartBurning();
 };
