@@ -24,6 +24,8 @@
 AC_PlayGM::AC_PlayGM()
 {
 	bUseSeamlessTravel = false;
+
+	BurningOrder = 0;
 }
 
 void AC_PlayGM::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) {
@@ -253,6 +255,7 @@ void AC_PlayGM::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AC_PlayGM, ConnectedPlayerControllers);
+	DOREPLIFETIME(AC_PlayGM, BurningAreas);
 
 }
 
@@ -393,7 +396,7 @@ void AC_PlayGM::RealStartGame_Implementation() {
 	}
 
 	// 초 증가 타이머함수 실행.
-	GetWorldTimerManager().SetTimer(GameTimeHandle, this, &AC_PlayGM::GameTime, 0.01f, true);
+	GetWorldTimerManager().SetTimer(GameTimeHandle, this, &AC_PlayGM::GameTime, 0.001f, true);
 }
 
 TArray<int> AC_PlayGM::SetSpawnLocation() {
@@ -437,9 +440,9 @@ TArray<int> AC_PlayGM::SetSpawnLocation() {
 
 void AC_PlayGM::PreLogin(const FString & Options, const FString & Address, const FUniqueNetIdRepl & UniqueId, FString & ErrorMessage)
 {
-	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
+	// Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
 
-	ErrorMessage = TEXT("Nop"); // 중도 참여 막기
+	// ErrorMessage = TEXT("Nop"); // 중도 참여 막기
 }
 
 void AC_PlayGM::GameTime() {
@@ -447,16 +450,24 @@ void AC_PlayGM::GameTime() {
 
 	if (GS) {
 		GS->ms++;
+		GS->TimeIncrese();
 	}
 }
 
 void AC_PlayGM::StartBurning()
 {
 	// 배열을 가져온다.
-
-	// 첫번째 순서에 있는 BurningArea 활성화.
-
-	// 두번째 순서에 있는 BruningArea 활성화.
+	for (AC_BurningArea* CB : BurningAreas) {
+		if (CB->MyOrder == BurningOrder) {
+			CB->SetActivate();
+			BroadBurningAreaToAll(BurningOrder);
+		}
+	}
 
 	// 이미 활성화 되어있는 BrunignArea 를 더 강하게 만든다.
+	for (AC_BurningArea* CB : BurningAreas) {
+		CB->MoreStrog();
+	}
+	
+	BurningOrder++;
 }

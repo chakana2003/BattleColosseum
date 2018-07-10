@@ -28,6 +28,7 @@ public: // 변수
 
 	class ATriggerBox* SpawnBox;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	TArray<ATriggerBox*> StartBoxes;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
@@ -36,8 +37,10 @@ public: // 변수
 	FTimerHandle CountdownTimeHandle;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FTimerHandle GameTimeHandle;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	TArray<AC_BurningArea*> BurningAreas;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	int BurningOrder;
 
 public: // 함수
 
@@ -64,6 +67,7 @@ public: // 함수
 	UFUNCTION()
 	void CountdownTimer();
 
+	UFUNCTION(BlueprintCallable)
 	void YesSpawn();		// 로비 캐릭터 생성 함수.
 
 	UFUNCTION(Server, reliable, WithValidation)
@@ -78,17 +82,22 @@ public: // 함수
 	void SendWarriorFromCode(APlayerController* Player);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void BeginStartTimer();
+	void BeginStartTimer();					// 카운트다운 시작
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void PopStartTimer();
+	void PopStartTimer();					// 카운트다운 호출
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void EndStartTimer();
+	void EndStartTimer();					// 카운트다운 종료
 
 	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage);
 
-	void GameTime();
+	UFUNCTION(BlueprintCallable)
+	void GameTime();							// 인게임 처리 함수.
 
-	void StartBurning();
+	UFUNCTION(BlueprintCallable)
+	void StartBurning();						// 불타기 시작함.
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void BroadBurningAreaToAll(int Order);		// 불타기 시작하는 위젯애니메이션 재생을 위한 함수.
 };

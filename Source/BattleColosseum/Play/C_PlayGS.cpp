@@ -46,6 +46,7 @@ void AC_PlayGS::Tick(float DeltaSeconds){
 
 void AC_PlayGS::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
 	DOREPLIFETIME(AC_PlayGS, LeftStartTime);
 	DOREPLIFETIME(AC_PlayGS, DoesStart);
 	DOREPLIFETIME(AC_PlayGS, PreStart);
@@ -99,7 +100,7 @@ void AC_PlayGS::TimeIncrese() {
 		AC_PlayGM* GM = Cast<AC_PlayGM>(UGameplayStatics::GetGameMode(GetWorld()));
 		if (GM) {
 			// 0분째가 아닐 때, 4분마다 지역 제한.
-			if (min = !0 && min % 4 == 0) {
+			if (min != 0 && min % 4 == 0) {
 				GM->StartBurning();
 			}
 		}
