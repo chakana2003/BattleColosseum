@@ -25,7 +25,7 @@ public:		// 변수
 	bool MoveComplete;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = FromCode)
-	float MoveingRate = 100.f;
+	float MoveingRate = 100000.f;
 public:		// 함수
 	AC_BurningArea();
 
