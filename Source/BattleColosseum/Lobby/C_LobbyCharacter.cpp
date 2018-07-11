@@ -16,11 +16,9 @@
 AC_LobbyCharacter::AC_LobbyCharacter() {
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	UserID = CreateDefaultSubobject<UTextRenderComponent>(TEXT("UserID"));
 
 	SpringArm->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	Camera->AttachToComponent(SpringArm, FAttachmentTransformRules::KeepRelativeTransform);
-	UserID->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform);
 
 	GetMesh()->SetRelativeLocationAndRotation(FVector(0.f, 0.f, -88.f), FRotator(0.f, -90.f, 0.f));
 
@@ -38,18 +36,12 @@ AC_LobbyCharacter::AC_LobbyCharacter() {
 	SpringArm->TargetArmLength = 150.f;						// 카메라 거리 가깝게 설정
 	SpringArm->bEnableCameraLag = true;
 	SpringArm->bEnableCameraRotationLag = true;
-	SpringArm->CameraLagSpeed = 9.0f;
-	SpringArm->CameraRotationLagSpeed = 9.0f;
+	SpringArm->CameraLagSpeed = 10.0f;
+	SpringArm->CameraRotationLagSpeed = 10.0f;
 
 	GetCapsuleComponent()->SetNotifyRigidBodyCollision(true);  // hit 이벤트 활성화(옛날이름)
 	GetCapsuleComponent()->SetCapsuleHalfHeight(88.f);
 	GetCapsuleComponent()->SetCapsuleRadius(34.f);
-
-	UserID->SetRelativeLocation(FVector(0.f, 0.f, 200.f));
-	UserID->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
-	UserID->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
-	UserID->SetText(FText::FromString(TEXT("UserID")));
-	UserID->SetIsReplicated(true);
 }
 
 void AC_LobbyCharacter::BeginPlay()

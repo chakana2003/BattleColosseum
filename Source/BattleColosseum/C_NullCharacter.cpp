@@ -18,7 +18,6 @@ AC_NullCharacter::AC_NullCharacter() {
 	Projectile = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Springarm"));
-	UserID = CreateDefaultSubobject<UTextRenderComponent>(TEXT("UserID"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Sphere(TEXT("StaticMesh'/Game/Meshes/SM_Cube.SM_Cube'"));
@@ -27,7 +26,6 @@ AC_NullCharacter::AC_NullCharacter() {
 	StaticMesh->AttachToComponent(Box, FAttachmentTransformRules::KeepRelativeTransform);
 	SpringArm->AttachToComponent(StaticMesh,FAttachmentTransformRules::KeepRelativeTransform);
 	Camera->AttachToComponent(SpringArm,FAttachmentTransformRules::KeepRelativeTransform);
-	UserID->AttachToComponent(StaticMesh, FAttachmentTransformRules::KeepRelativeTransform);
 
 	Projectile->bRotationFollowsVelocity = false;
 	Projectile->bShouldBounce = true;
@@ -61,13 +59,6 @@ AC_NullCharacter::AC_NullCharacter() {
 	SpringArm->CameraLagSpeed = 20.f;
 	SpringArm->CameraRotationLagSpeed = 20.f;
 	SpringArm->RelativeRotation = FRotator(-30.f, 0.f, 0.f);
-
-	UserID->SetRelativeLocation(FVector(0.f, 0.f, 50.f));
-	UserID->HorizontalAlignment = EHorizTextAligment::EHTA_Center;
-	UserID->SetText(TEXT("USER ID"));
-	UserID->XScale = 5.f;
-	UserID->YScale = 5.f;
-	UserID->SetIsReplicated(true);
 }
 
 void AC_NullCharacter::SetupPlayerInputComponent(UInputComponent * PlayerInputComponent)
@@ -79,6 +70,17 @@ void AC_NullCharacter::SetupPlayerInputComponent(UInputComponent * PlayerInputCo
 	PlayerInputComponent->BindAction("K_ImpactA", IE_Pressed, this, &AC_NullCharacter::ForceA);
 	PlayerInputComponent->BindAction("K_ImpactD", IE_Pressed, this, &AC_NullCharacter::ForceD);
 	PlayerInputComponent->BindAction("K_Jump", IE_Pressed, this, &AC_NullCharacter::JumpHigh);
+
+	// PlayerInputComponent->BindAxis("K_LookUp", this, &AC_NullCharacter::LookUp);
+	PlayerInputComponent->BindAxis("K_Turn", this, &AC_NullCharacter::Turn);
+}
+
+void AC_NullCharacter::LookUp(float Val) {
+	SpringArm->AddRelativeRotation(FRotator(Val, 0.f, 0.f));
+}
+
+void AC_NullCharacter::Turn(float Val) {
+	SpringArm->AddRelativeRotation(FRotator(0.f, Val, 0.f));
 }
 
 bool AC_NullCharacter::ForceW_Validate() {

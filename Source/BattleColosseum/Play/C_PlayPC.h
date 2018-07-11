@@ -36,4 +36,7 @@ public: // ÇÔ¼ö
 	void PossessingPawn(APawn* TargetPawn);
 
 	void StartGame();
+
+	UFUNCTION(BlueprintCallable, Client, reliable, WithValidation)
+	void CopyInfo(FC_S_PlayerInfo NewInfo);
 };

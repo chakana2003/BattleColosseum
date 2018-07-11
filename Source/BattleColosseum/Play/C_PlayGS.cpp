@@ -20,6 +20,8 @@ AC_PlayGS::AC_PlayGS() {
 	hour = 0;
 
 	LeftStartTime = 10.f;
+
+	WaitForDeleteArea = false;
 }
 
 void AC_PlayGS::Tick(float DeltaSeconds){
@@ -47,6 +49,11 @@ void AC_PlayGS::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 	DOREPLIFETIME(AC_PlayGS, LeftStartTime);
 	DOREPLIFETIME(AC_PlayGS, DoesStart);
 	DOREPLIFETIME(AC_PlayGS, PreStart);
+	DOREPLIFETIME(AC_PlayGS, ms);
+	DOREPLIFETIME(AC_PlayGS, sec);
+	DOREPLIFETIME(AC_PlayGS, min);
+	DOREPLIFETIME(AC_PlayGS, hour);
+	DOREPLIFETIME(AC_PlayGS, WaitForDeleteArea);
 }
 
 void AC_PlayGS::OnRep_LeftTime()
@@ -71,4 +78,32 @@ void AC_PlayGS::OnRep_LeftTime()
 			}
 		}
 	}
+}
+
+void AC_PlayGS::TimeIncrese() {
+	if (ms >= 100.f) {
+		ms = 0;
+		sec++;
+		if (sec >= 60) {
+			sec = 0;
+			min++;
+			if (min >= 60) {
+				min = 0;
+				hour++;
+			}
+		}
+	}
+
+	// 지역 제한 확인
+	if (HasAuthority()) {
+		AC_PlayGM* GM = Cast<AC_PlayGM>(UGameplayStatics::GetGameMode(GetWorld()));
+		if (GM) {
+			// 0분째가 아닐 때, 4분마다 지역 제한.
+			if (min = !0 && min % 4 == 0) {
+				GM->StartBurning();
+			}
+		}
+	}
+	
+	
 }

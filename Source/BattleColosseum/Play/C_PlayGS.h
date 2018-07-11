@@ -15,17 +15,27 @@ class BATTLECOLOSSEUM_API AC_PlayGS : public AGameStateBase
 	GENERATED_BODY()
 
 public: // 변수
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, ReplicatedUsing = TimeIncrese)
 	float ms;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	int sec;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	int min;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	int hour;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	bool PreStart;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	bool DoesStart;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_LeftTime)
 	float LeftStartTime;
+
+	// 지역 제한을 확인하는 bool
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
+	bool WaitForDeleteArea;
 
 public: // 함수
 	AC_PlayGS();
@@ -36,5 +46,8 @@ public: // 함수
 
 	UFUNCTION()
 	void OnRep_LeftTime();
+
+	UFUNCTION()
+	void TimeIncrese();
 
 };

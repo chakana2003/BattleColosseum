@@ -7,6 +7,7 @@
 #include "Engine/TriggerBox.h"
 #include "Play/King/C_KingPawn.h"
 #include "Play/Warrior/C_WarriorCharacter.h"
+#include "Play/C_BurningArea.h"
 #include "C_PlayGM.generated.h"
 
 /**
@@ -20,15 +21,23 @@ class BATTLECOLOSSEUM_API AC_PlayGM : public AGameModeBase
 public: // 변수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated)
 	TArray<APlayerController*> ConnectedPlayerControllers;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<AC_WarriorCharacter*> Warriors;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class AC_KingPawn* King;
 
 	class ATriggerBox* SpawnBox;
 
 	TArray<ATriggerBox*> StartBoxes;
 
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	FTimerHandle StartTimeHandle;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FTimerHandle CountdownTimeHandle;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FTimerHandle GameTimeHandle;
+
+	TArray<AC_BurningArea*> BurningAreas;
 
 public: // 함수
 
@@ -53,15 +62,33 @@ public: // 함수
 	void CallSpawn();
 
 	UFUNCTION()
-	void StartTimer();
+	void CountdownTimer();
 
-	void YesSpawn();
+	void YesSpawn();		// 로비 캐릭터 생성 함수.
 
 	UFUNCTION(Server, reliable, WithValidation)
-	void RealStartGame();
+	void RealStartGame();	// 실제 게임캐릭터 생성 함수. 
 
 	TArray<int> SetSpawnLocation();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void SendCurrentPC(APlayerController* Player);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SendWarriorFromCode(APlayerController* Player);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void BeginStartTimer();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PopStartTimer();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void EndStartTimer();
+
+	virtual void PreLogin(const FString& Options, const FString& Address, const FUniqueNetIdRepl& UniqueId, FString& ErrorMessage);
+
+	void GameTime();
+
+	void StartBurning();
 };

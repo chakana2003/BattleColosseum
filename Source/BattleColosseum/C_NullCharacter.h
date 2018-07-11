@@ -27,8 +27,6 @@ public: // 변수
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class USpringArmComponent* SpringArm;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	class UTextRenderComponent* UserID;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
 	class UCameraComponent* Camera;
 
 public: // 함수
@@ -45,4 +43,10 @@ public: // 함수
 	void ForceD();
 	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
 	void JumpHigh();
+
+	void LookUp(float Val);
+
+	void Turn(float Val);
 };
+
+

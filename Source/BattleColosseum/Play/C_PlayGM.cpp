@@ -29,18 +29,23 @@ AC_PlayGM::AC_PlayGM()
 void AC_PlayGM::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) {
 	Super::InitGame(MapName, Options, ErrorMessage);
 
-	UKismetSystemLibrary::PrintString(GetWorld(), TEXT("InitGame Call"), true, true, FLinearColor(1.f, 1.f, 1.f, 1.f), 10.f);
-	TArray<AActor*> outer;
+	// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("InitGame Call"), true, true, FLinearColor(1.f, 1.f, 1.f, 1.f), 10.f);
+	
+	TArray<AActor*> outer;	// AActor 배열 임시 저장
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("FirstSpawn"), outer);
 	if (outer[0]) {
-		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("1. Create SpawnBox"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+		// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("1. Create SpawnBox"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+		
+		// 맨 처음 스폰박스 배정.
 		SpawnBox = Cast<ATriggerBox>(outer[0]);
 	}
 	else {
 		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("1-1. Not Create SpawnBox"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 	}
 
-	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("StartBox"), outer);	// 시작 위치 지정 박스 스폰 및 할당.
+	// UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("StartBox"), outer);
+	
+	// 시작 위치 지정 박스 스폰 및 할당.
 	if (outer[0]) {
 		for (AActor* out : outer) {
 			ATriggerBox* TB = Cast<ATriggerBox>(out);
@@ -49,31 +54,74 @@ void AC_PlayGM::InitGame(const FString& MapName, const FString& Options, FString
 			}
 		}
 	}
+
+	// BurningArea 를 할당.
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("BurningArea"), outer);
+	if (outer[0]) {
+		for (AActor* out : outer) {
+			AC_BurningArea* BA = Cast<AC_BurningArea>(out);
+			if (BA) {
+				BurningAreas.Add(BA);
+			}
+		}
+
+		// 0 번이 첫번째 내려오는 BurningArea
+		TArray<int> TempOrder;
+		for (int i = 0; i < BurningAreas.Num(); i++) {
+			TempOrder.Add(i);
+		}
+
+		for (int i = 0; i < 100; i++) {
+			int First = (int)FMath::FRandRange(0.f, (float)StartBoxes.Num());
+			int Second = (int)FMath::FRandRange(0.f, (float)StartBoxes.Num());
+
+			int temp = TempOrder[First];
+
+			TempOrder[First] = TempOrder[Second];
+			TempOrder[Second] = temp;
+		}
+
+		for (int i = 0; i < BurningAreas.Num(); i++) {
+			for (AC_BurningArea* BA : BurningAreas) {
+				if (BA->ActorHasTag(FName(*FString::FromInt(i)))) {
+					BA->MyOrder = TempOrder[i];
+					break;
+				}
+				
+			}
+		}
+
+	}
 }
 
 void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerController * NewPC)
 {
 	Super::SwapPlayerControllers(OldPC, NewPC);
 
-	UKismetSystemLibrary::PrintString(GetWorld(), TEXT("SwapPlayerControllers Call"), true, true, FLinearColor(1.f, 1.f, 1.f, 1.f), 10.f);
+	// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("SwapPlayerControllers Call"), true, true, FLinearColor(1.f, 1.f, 1.f, 1.f), 10.f);
+	
+	// 이전에 썼던 컨트롤러를 캐스트
 	AC_LobbyPC* LobbyPC = Cast<AC_LobbyPC>(OldPC);
 	if (LobbyPC) {
+		// 현재 쓰고있는 컨트롤러를 캐스트
 		AC_PlayPC* PlayPC = Cast<AC_PlayPC>(NewPC);
 		if (PlayPC) {
-			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. MyInfo Coppy"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
-			PlayPC->MyInfo = LobbyPC->MyInfo;
-			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. Load Call"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+			// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. MyInfo Coppy"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+			// Info 옮김.
+			// PlayPC->MyInfo = LobbyPC->MyInfo;	//원래코드. 서버에서도 바꿔줘야하니까 해야하지않을까.
+			PlayPC->CopyInfo(LobbyPC->MyInfo);		// 수정 코드.
+			// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. Load Call"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 			ConnectedPlayerControllers.Add(NewPC);
-			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. ConnectedPlayer Array Add"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
-			SendCurrentPC(NewPC);
+			// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. ConnectedPlayer Array Add"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+			SendCurrentPC(NewPC);		// PC들의 위젯을 생성하기 위해 생성한 블루프린트 이벤트.
 			// PlayPC->PassCharacterToServer(PlayPC->MyInfo);  // 첨부터 스폰하면 안됨..
 		}
 		else {
-			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2-1. NewPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
+			// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2-1. NewPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 		}
 	}
 	else {
-		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2-2. OldPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
+		// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2-2. OldPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 	}
 }
 
@@ -81,12 +129,10 @@ void AC_PlayGM::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetWorldTimerManager().SetTimer(StartTimeHandle,
-		this,
-		&AC_PlayGM::StartTimer,
-		1.0f,
-		true,
-		0);
+	GetWorldTimerManager().SetTimer(StartTimeHandle, this, &AC_PlayGM::CountdownTimer, 1.0f, true, 0);
+
+	// 5초후 카운트다운 위젯이 나타나기 위해 생성한 블루프린트 이벤트를 호출.
+	GetWorldTimerManager().SetTimer(CountdownTimeHandle, this, &AC_PlayGM::BeginStartTimer, 5.0f, false);
 }
 
 void AC_PlayGM::CallSpawn()
@@ -99,37 +145,49 @@ void AC_PlayGM::CallSpawn()
 	}
 }
 
-void AC_PlayGM::StartTimer()
+void AC_PlayGM::CountdownTimer()
 {
 	auto GS = GetGameState<AC_PlayGS>();
 
 	if (GS)
 	{
-		GS->LeftStartTime--;
 		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%f"),GS->LeftStartTime));
-		if (HasAuthority())
-		{
-			GS->OnRep_LeftTime();
-			if (GS->LeftStartTime < 0 && !(GS->DoesStart))
-			{
-				GS->LeftStartTime = 30.f;
+		// PopStartTimer() 의 원래자리.
 
-				for (auto PC : ConnectedPlayerControllers) {			// Pawn 변수 저장.
-					AC_WarriorCharacter* TempWarrior = Cast<AC_WarriorCharacter>(PC->GetPawn());
-					AC_KingPawn* TempKing = Cast<AC_KingPawn>(PC->GetPawn());
-					if (TempWarrior) {
-						Warriors.Add(TempWarrior);
-					}
-					else if (TempKing) {
-						King = TempKing;
-					}
+		// LeftStartTimer 가 변경되면 자동으로 호출되는 함수인데 이게 여기 없어도 되지않을까.
+		GS->OnRep_LeftTime();
+
+		if (GS->LeftStartTime < 0 && !(GS->DoesStart))
+		{
+			// 캐릭터 스폰을 위해 남은시간 초기화.
+			GS->LeftStartTime = 30.f;
+			for (auto PC : ConnectedPlayerControllers) {
+				
+				// Pawn 변수 저장.
+				AC_WarriorCharacter* TempWarrior = Cast<AC_WarriorCharacter>(PC->GetPawn());
+				AC_KingPawn* TempKing = Cast<AC_KingPawn>(PC->GetPawn());
+				
+				// 왕과 워리어를 저장해줌.
+				if (TempWarrior) {
+					Warriors.Add(TempWarrior);
+				}
+				else if (TempKing) {
+					King = TempKing;
 				}
 			}
 		}
+
+		// 게임 캐릭터가 생성되면 타이머가 초기화됨.
 		if (GS->DoesStart) {
 			GetWorldTimerManager().ClearTimer(StartTimeHandle);
+			EndStartTimer();
 		}
+
+		PopStartTimer();		// 수정된 자리.
+		GS->LeftStartTime--;	// LeftStartTimer 가 변경되면 GS->OnRep_LeftTime() 이 호출될까.
 	}
+
+	
 }
 
 void AC_PlayGM::YesSpawn()
@@ -139,21 +197,28 @@ void AC_PlayGM::YesSpawn()
 		if (PlayPC) {
 			if (PlayPC->GetPawn())
 			{
+				// 이미 빙의되어있는 Panw 을 제거.
 				PlayPC->GetPawn()->Destroy();
 			}
+
+			// 랜덤한 위치, 방향 생성.
 			FVector RandPos = UKismetMathLibrary::RandomPointInBoundingBox(SpawnBox->GetActorLocation(), SpawnBox->GetComponentsBoundingBox().GetExtent());
 			float Rando = UKismetMathLibrary::RandomFloatInRange(0.f, 360.f);
 			FQuat RandRot = FQuat(FRotator(0.f, Rando, 0.f));
 
+			// 트랜스폼 생성.
 			FTransform SpawnTransform;
 			SpawnTransform.SetRotation(RandRot);
 			SpawnTransform.SetLocation(RandPos);
 			SpawnTransform.SetScale3D(FVector(1.f));
+			
+			// 캐릭터 스폰.
 			AActor* SpawnedAct = GetWorld()->SpawnActor<APawn>(PlayPC->MyInfo.SelectCharacter.LobbyCharacter, SpawnTransform);
 			
+			// 스폰된 액터 빙의.
 			APawn* Pawn = Cast<APawn>(SpawnedAct);
 			if (Pawn) {
-				UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+				// KismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 				PlayPC->PossessingPawn(Pawn);
 			}
 		}
@@ -279,17 +344,21 @@ void AC_PlayGM::RealStartGame_Implementation() {
 
 	for (APlayerController* PC : ConnectedPlayerControllers) {
 		if (PC->GetPawn()) {
+			// 원래 생성된 캐릭터 삭제.
 			PC->GetPawn()->Destroy();
 		}
 	}
+
 	int yes = 0;		// 배열을 가르키는 변수.
 	for (APlayerController* PC : ConnectedPlayerControllers) {
 		AC_PlayPC* PlayPC = Cast<AC_PlayPC>(PC);
 		if (PlayPC) {
-				// 용병인지
+			// 먼저 스폰한 다음에.
 			AActor* SpawnedAct = GetWorld()->SpawnActor<APawn>(PlayPC->MyInfo.SelectCharacter.GameCharacter, SpawnBox->GetActorTransform());
 			AC_WarriorCharacter* SpawnWarrior = Cast<AC_WarriorCharacter>(SpawnedAct);
 			AC_KingPawn* SpawnKing = Cast<AC_KingPawn>(SpawnedAct);
+			
+			// 용병인지.
 			if (SpawnWarrior) {
 				// StartBox 트랜스폼 생성.
 				FVector RandPos = UKismetMathLibrary::RandomPointInBoundingBox(StartBoxes[SuffleIndex[yes]]->GetActorLocation(), StartBoxes[SuffleIndex[yes]]->GetComponentsBoundingBox().GetExtent());
@@ -309,6 +378,7 @@ void AC_PlayGM::RealStartGame_Implementation() {
 				// 빙의
 					UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 					PlayPC->PossessingPawn(Pawn);
+					SendWarriorFromCode(PC);
 				}
 			}	// 왕인지
 			else if(SpawnKing) {
@@ -321,6 +391,9 @@ void AC_PlayGM::RealStartGame_Implementation() {
 			yes++;
 		}
 	}
+
+	// 초 증가 타이머함수 실행.
+	GetWorldTimerManager().SetTimer(GameTimeHandle, this, &AC_PlayGM::GameTime, 0.01f, true);
 }
 
 TArray<int> AC_PlayGM::SetSpawnLocation() {
@@ -360,4 +433,30 @@ TArray<int> AC_PlayGM::SetSpawnLocation() {
 		//}
 	}
 	return TempSuffle;
+}
+
+void AC_PlayGM::PreLogin(const FString & Options, const FString & Address, const FUniqueNetIdRepl & UniqueId, FString & ErrorMessage)
+{
+	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
+
+	ErrorMessage = TEXT("Nop"); // 중도 참여 막기
+}
+
+void AC_PlayGM::GameTime() {
+	AC_PlayGS* GS = GetGameState<AC_PlayGS>();
+
+	if (GS) {
+		GS->ms++;
+	}
+}
+
+void AC_PlayGM::StartBurning()
+{
+	// 배열을 가져온다.
+
+	// 첫번째 순서에 있는 BurningArea 활성화.
+
+	// 두번째 순서에 있는 BruningArea 활성화.
+
+	// 이미 활성화 되어있는 BrunignArea 를 더 강하게 만든다.
 }
