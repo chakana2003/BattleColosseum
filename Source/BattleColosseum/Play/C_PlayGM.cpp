@@ -24,6 +24,9 @@
 AC_PlayGM::AC_PlayGM()
 {
 	bUseSeamlessTravel = false;
+
+	BurningOrder = 0;
+	WorldTime = 1.f;
 }
 
 void AC_PlayGM::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) {
@@ -43,9 +46,8 @@ void AC_PlayGM::InitGame(const FString& MapName, const FString& Options, FString
 		UKismetSystemLibrary::PrintString(GetWorld(), TEXT("1-1. Not Create SpawnBox"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 	}
 
-	// UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("StartBox"), outer);
-	
 	// 시작 위치 지정 박스 스폰 및 할당.
+	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("StartBox"), outer);
 	if (outer[0]) {
 		for (AActor* out : outer) {
 			ATriggerBox* TB = Cast<ATriggerBox>(out);
@@ -55,43 +57,49 @@ void AC_PlayGM::InitGame(const FString& MapName, const FString& Options, FString
 		}
 	}
 
+	CreateBurningArray();
+}
+
+void AC_PlayGM::CreateBurningArray(){
+	TArray<AActor*> outer;	// AActor 배열 임시 저장
 	// BurningArea 를 할당.
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(), TEXT("BurningArea"), outer);
-	if (outer[0]) {
-		for (AActor* out : outer) {
-			AC_BurningArea* BA = Cast<AC_BurningArea>(out);
-			if (BA) {
-				BurningAreas.Add(BA);
-			}
+if (outer[0]) {
+	for (AActor* out : outer) {
+		AC_BurningArea* BA = Cast<AC_BurningArea>(out);
+		if (BA) {
+			BurningAreas.Add(BA);
 		}
-
-		// 0 번이 첫번째 내려오는 BurningArea
-		TArray<int> TempOrder;
-		for (int i = 0; i < BurningAreas.Num(); i++) {
-			TempOrder.Add(i);
-		}
-
-		for (int i = 0; i < 100; i++) {
-			int First = (int)FMath::FRandRange(0.f, (float)StartBoxes.Num());
-			int Second = (int)FMath::FRandRange(0.f, (float)StartBoxes.Num());
-
-			int temp = TempOrder[First];
-
-			TempOrder[First] = TempOrder[Second];
-			TempOrder[Second] = temp;
-		}
-
-		for (int i = 0; i < BurningAreas.Num(); i++) {
-			for (AC_BurningArea* BA : BurningAreas) {
-				if (BA->ActorHasTag(FName(*FString::FromInt(i)))) {
-					BA->MyOrder = TempOrder[i];
-					break;
-				}
-				
-			}
-		}
-
 	}
+
+	// 0 번이 첫번째 내려오는 BurningArea
+	TArray<int> TempOrder;
+	for (int i = 1; i < BurningAreas.Num(); i++) {
+		TempOrder.Add(i);
+	}
+
+	for (int i = 0; i < 100; i++) {
+		int First = (int)FMath::FRandRange(0.f, (float)BurningAreas.Num()-1);
+		int Second = (int)FMath::FRandRange(0.f, (float)BurningAreas.Num()-1);
+
+		int temp = TempOrder[First];
+
+		TempOrder[First] = TempOrder[Second];
+		TempOrder[Second] = temp;
+	}
+
+	// 지역 태그가 1번부터 시작함.
+	for (int i = 1; i < BurningAreas.Num(); i++) {
+		for (AC_BurningArea* BA : BurningAreas) {
+			if (BA->ActorHasTag(FName(*FString::FromInt(i)))) {
+				BA->MyOrder = TempOrder[i-1];
+				break;
+			}
+
+		}
+	}
+
+}
 }
 
 void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerController * NewPC)
@@ -108,8 +116,9 @@ void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerControll
 		if (PlayPC) {
 			// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. MyInfo Coppy"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 			// Info 옮김.
-			// PlayPC->MyInfo = LobbyPC->MyInfo;	//원래코드. 서버에서도 바꿔줘야하니까 해야하지않을까.
-			PlayPC->CopyInfo(LobbyPC->MyInfo);		// 수정 코드.
+			PlayPC->MyInfo = LobbyPC->MyInfo;		// 원래코드. 서버에서도 바꿔줘야하니까 해야하지않을까.
+													// 라고 생각했지만 서버에서도 저장해야하고 클라이언트에서도 저장해야하기때문에 위 코드는 서버 저장용.
+			PlayPC->CopyInfo(LobbyPC->MyInfo);		// 수정 코드. 이 코드는 클라에게 전달용.
 			// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. Load Call"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 			ConnectedPlayerControllers.Add(NewPC);
 			// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. ConnectedPlayer Array Add"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
@@ -253,6 +262,7 @@ void AC_PlayGM::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AC_PlayGM, ConnectedPlayerControllers);
+	DOREPLIFETIME(AC_PlayGM, BurningAreas);
 
 }
 
@@ -393,7 +403,7 @@ void AC_PlayGM::RealStartGame_Implementation() {
 	}
 
 	// 초 증가 타이머함수 실행.
-	GetWorldTimerManager().SetTimer(GameTimeHandle, this, &AC_PlayGM::GameTime, 0.01f, true);
+	GetWorldTimerManager().SetTimer(GameTimeHandle, this, &AC_PlayGM::GameTime, WorldTime, true);
 }
 
 TArray<int> AC_PlayGM::SetSpawnLocation() {
@@ -437,9 +447,9 @@ TArray<int> AC_PlayGM::SetSpawnLocation() {
 
 void AC_PlayGM::PreLogin(const FString & Options, const FString & Address, const FUniqueNetIdRepl & UniqueId, FString & ErrorMessage)
 {
-	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
+	// Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
 
-	ErrorMessage = TEXT("Nop"); // 중도 참여 막기
+	// ErrorMessage = TEXT("Nop"); // 중도 참여 막기
 }
 
 void AC_PlayGM::GameTime() {
@@ -447,16 +457,37 @@ void AC_PlayGM::GameTime() {
 
 	if (GS) {
 		GS->ms++;
+		GS->TimeIncrese();
 	}
+}
+
+void AC_PlayGM::PreBurning() {
+	for (AC_BurningArea* CB : BurningAreas) {
+		if (CB->MyOrder == BurningOrder) {
+			BroadBurningAreaToAll(CB->Tags[BurningOrder]);
+			break;
+		}
+	}
+
+	GetWorldTimerManager().SetTimer(BurningTimeHandle, this, &AC_PlayGM::StartBurning, 120.f, false);
 }
 
 void AC_PlayGM::StartBurning()
 {
 	// 배열을 가져온다.
-
-	// 첫번째 순서에 있는 BurningArea 활성화.
-
-	// 두번째 순서에 있는 BruningArea 활성화.
+	for (AC_BurningArea* CB : BurningAreas) {
+		if (CB->MyOrder == BurningOrder) {
+			CB->SetActivate();
+			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%s was Closed"), *(CB->Tags[1].ToString())));
+			break;
+		}
+	}
 
 	// 이미 활성화 되어있는 BrunignArea 를 더 강하게 만든다.
+	for (AC_BurningArea* CB : BurningAreas) {
+		CB->MoreStrog();
+	}
+
+	GetWorldTimerManager().ClearTimer(BurningTimeHandle);
+	BurningOrder++;
 }
