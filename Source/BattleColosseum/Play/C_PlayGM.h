@@ -37,10 +37,14 @@ public: // 변수
 	FTimerHandle CountdownTimeHandle;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FTimerHandle GameTimeHandle;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FTimerHandle BurningTimeHandle;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	TArray<AC_BurningArea*> BurningAreas;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	int BurningOrder;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float WorldTime;
 
 public: // 함수
 
@@ -95,9 +99,14 @@ public: // 함수
 	UFUNCTION(BlueprintCallable)
 	void GameTime();							// 인게임 처리 함수.
 
+	void PreBurning();
+
 	UFUNCTION(BlueprintCallable)
 	void StartBurning();						// 불타기 시작함.
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void BroadBurningAreaToAll(int Order);		// 불타기 시작하는 위젯애니메이션 재생을 위한 함수.
+	void BroadBurningAreaToAll(FName AreaNumb);		// 불타기 시작하는 위젯애니메이션 재생을 위한 함수.
+
+	UFUNCTION(BlueprintCallable)
+	void CreateBurningArray();
 };

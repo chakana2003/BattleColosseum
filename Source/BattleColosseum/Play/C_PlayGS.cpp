@@ -27,21 +27,21 @@ AC_PlayGS::AC_PlayGS() {
 void AC_PlayGS::Tick(float DeltaSeconds){
 	GetServerWorldTimeSeconds();
 
-	if (ms >= 1.f) {
-		ms = 0.f;
-		sec++;
-		GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("%d is CurrentTime"), sec));
-	}
+	//if (ms >= 100.f) {
+	//	ms = 0.f;
+	//	sec++;
+	//  GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("%d is CurrentTime"), sec));
+	//}
 
-	if (sec >= 60) {
-		sec = 0;
-		min++;
-	}
+	//if (sec >= 60) {
+	//	sec = 0;
+	//	min++;
+	//}
 
-	if (min >= 60) {
-		min = 0;
-		hour++;
-	}
+	//if (min >= 60) {
+	//	min = 0;
+	//	hour++;
+	//}
 }
 
 void AC_PlayGS::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const {
@@ -88,6 +88,17 @@ void AC_PlayGS::TimeIncrese() {
 		if (sec >= 60) {
 			sec = 0;
 			min++;
+
+			// 지역 제한 확인 - 분이 바뀔때 체크해야하기때문에 이곳에 설정.
+			if (HasAuthority()) {
+				AC_PlayGM* GM = Cast<AC_PlayGM>(UGameplayStatics::GetGameMode(GetWorld()));
+				if (GM) {
+					// 0분째가 아닐 때, 4분마다 지역 제한.
+					if (min != 0 && min % 6 == 0) {
+						GM->PreBurning();
+					}
+				}
+			}
 			if (min >= 60) {
 				min = 0;
 				hour++;
@@ -95,16 +106,7 @@ void AC_PlayGS::TimeIncrese() {
 		}
 	}
 
-	// 지역 제한 확인
-	if (HasAuthority()) {
-		AC_PlayGM* GM = Cast<AC_PlayGM>(UGameplayStatics::GetGameMode(GetWorld()));
-		if (GM) {
-			// 0분째가 아닐 때, 4분마다 지역 제한.
-			if (min != 0 && min % 4 == 0) {
-				GM->StartBurning();
-			}
-		}
-	}
+
 	
 	
 }

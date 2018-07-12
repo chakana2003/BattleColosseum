@@ -2,6 +2,8 @@
 
 #include "C_BurningArea.h"
 #include "UnrealNetwork.h"
+#include "TimerManager.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 
 AC_BurningArea::AC_BurningArea() {
@@ -14,6 +16,8 @@ AC_BurningArea::AC_BurningArea() {
 	Strong = 0;
 
 	MoveComplete = true;
+
+	Tags.Add(TEXT("BurningArea"));
 }
 
 void AC_BurningArea::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -25,14 +29,17 @@ void AC_BurningArea::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 void AC_BurningArea::BeginPlay()
 {
+	GetWorldTimerManager().SetTimer(CheckTimeHandler, this, &AC_BurningArea::CheckRaise, 0.1f,true);
 }
 
-void AC_BurningArea::Tick(float DeltaSeconds)
+bool AC_BurningArea::CheckRaise_Validate() {
+	return true;
+}
+void AC_BurningArea::CheckRaise_Implementation()
 {
 	// bPainCausing 이 true 가 되거나 MoveComplete 가 true 가 아닐때(!)
-
 	if (bPainCausing && !MoveComplete) {
-		SetActorLocation(GetActorLocation() + FVector(0.f, 0.f, DeltaSeconds*MoveingRate));
+		SetActorLocation(GetActorLocation() + FVector(0.f, 0.f, MoveingRate));
 
 		// 불이 밑에서 올라오기때문에 >= 를 씀.
 		if (GetActorLocation().Z >= 17840.f) {
@@ -42,7 +49,6 @@ void AC_BurningArea::Tick(float DeltaSeconds)
 			MoveComplete = true;
 		}
 	}
-	
 }
 
 bool AC_BurningArea::SetActivate_Validate() {
@@ -52,9 +58,6 @@ void AC_BurningArea::SetActivate_Implementation() {
 	bPainCausing = true;
 	DamagePerSec = 2.f;
 	MoveComplete = false;
-
-	// 내려왔을때 Z 값 17840.0
-	// 어떻게 부드럽게 액터가 움직이게 만들까? 꼭 Tick 을 써야하나?
 }
 
 bool AC_BurningArea::MoreStrog_Validate() {

@@ -24,21 +24,24 @@ public:		// 변수
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated, Category = FromCode)
 	bool MoveComplete;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = FromCode)
-	float MoveingRate = 100000.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FromCode)
+	float MoveingRate = 100.f;
+
+	FTimerHandle CheckTimeHandler;
+
 public:		// 함수
 	AC_BurningArea();
 
-	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+	UFUNCTION(BlueprintCallable, NetMulticast, reliable, WithValidation)
 	void SetActivate();
 
-	UFUNCTION(BlueprintCallable, Server, reliable, WithValidation)
+	UFUNCTION(BlueprintCallable, Client, reliable, WithValidation)
 	void MoreStrog();
 
 	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
 	virtual void BeginPlay() override;
 
-	virtual void Tick(float DeltaSeconds) override;
-
+	UFUNCTION(BlueprintCallable, Client, reliable, WithValidation)
+	void CheckRaise();
 };
