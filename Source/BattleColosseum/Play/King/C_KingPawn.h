@@ -51,8 +51,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UArrowComponent* CastArrow;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UArrowComponent* rootArrow;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UFloatingPawnMovement* FloatingMovement;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UCameraComponent* Camera;
 
 	FVector ZoomVector;
