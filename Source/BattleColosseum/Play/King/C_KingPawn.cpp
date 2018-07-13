@@ -12,15 +12,18 @@
 // Sets default values
 AC_KingPawn::AC_KingPawn()
 {
+	Scene = CreateDefaultSubobject<USceneComponent>(TEXT("Scene"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CastArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("CastArrow"));
 	FloatingMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingMovement"));
 
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	Camera->SetupAttachment(RootComponent);
+	
+	Scene->SetupAttachment(RootComponent);
+	Camera->SetupAttachment(Scene);
 	PrimaryActorTick.bCanEverTick = true;
 	CastArrow->SetupAttachment(Camera);
-
+	FloatingMovement->MaxSpeed = 300000;
 	Tags.Add(TEXT("King"));
 	
 	// 생성자에서는 Controller 가 없기 때문에 NULL 을 반환해서 크러쉬 발생 - 에디터 강제종료
@@ -81,6 +84,7 @@ void AC_KingPawn::Lookup(float Value)
 void AC_KingPawn::MoveForward(float Value)
 {
 	AddMovementInput(FVector(GetActorForwardVector().X, GetActorForwardVector().Y,0), Value);
+	
 }
 
 void AC_KingPawn::MoveRight(float Value)
@@ -89,7 +93,7 @@ void AC_KingPawn::MoveRight(float Value)
 }
 void AC_KingPawn::ZoomIn(float Value)
 {
-	ZoomVector = (FVector(GetActorForwardVector().X, GetActorForwardVector().Y, -0.5)*Value * 50);
+	ZoomVector = (FVector(GetActorForwardVector().X, GetActorForwardVector().Y, -0.5)*Value * 2000);
 	AddActorWorldOffset(ZoomVector);
 }
 
