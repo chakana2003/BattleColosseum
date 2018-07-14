@@ -32,6 +32,8 @@ AC_PlayGM::AC_PlayGM()
 	LobbyCharTime = 30.f;
 	BurningTime = 120.f;
 	WarningTime = 240.f;
+
+	JoinPossible = false;
 }
 
 void AC_PlayGM::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) {
@@ -458,7 +460,9 @@ void AC_PlayGM::PreLogin(const FString & Options, const FString & Address, const
 {
 	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
 
-	ErrorMessage = TEXT("Nop"); // 중도 참여 막기
+	if (!JoinPossible) {
+		ErrorMessage = TEXT("Nop"); // 중도 참여 막기
+	}
 }
 
 void AC_PlayGM::GameTime() {
