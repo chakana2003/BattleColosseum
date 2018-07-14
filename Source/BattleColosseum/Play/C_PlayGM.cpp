@@ -27,6 +27,11 @@ AC_PlayGM::AC_PlayGM()
 
 	BurningOrder = 0;
 	WorldTime = 1.f;
+
+	NullCharTime = 10.f;
+	LobbyCharTime = 30.f;
+	BurningTime = 120.f;
+	WarningTime = 240.f;
 }
 
 void AC_PlayGM::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) {
@@ -163,13 +168,10 @@ void AC_PlayGM::CountdownTimer()
 		GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%f"),GS->LeftStartTime));
 		// PopStartTimer() 의 원래자리.
 
-		// LeftStartTimer 가 변경되면 자동으로 호출되는 함수인데 이게 여기 없어도 되지않을까.
-		GS->OnRep_LeftTime();
-
 		if (GS->LeftStartTime < 0 && !(GS->DoesStart))
 		{
 			// 캐릭터 스폰을 위해 남은시간 초기화.
-			GS->LeftStartTime = 30.f;
+			GS->LeftStartTime = LobbyCharTime;
 			for (auto PC : ConnectedPlayerControllers) {
 				
 				// Pawn 변수 저장.
@@ -193,7 +195,9 @@ void AC_PlayGM::CountdownTimer()
 		}
 
 		PopStartTimer();		// 수정된 자리.
+
 		GS->LeftStartTime--;	// LeftStartTimer 가 변경되면 GS->OnRep_LeftTime() 이 호출될까.
+		GS->OnRep_LeftTime();	// LeftStartTimer 가 변경되면 자동으로 호출되는 함수인데 이게 여기 없어도 되지않을까 - 없으면 클라만 실행되고 서버는 실행안됨.
 	}
 
 	
@@ -389,6 +393,7 @@ void AC_PlayGM::RealStartGame_Implementation() {
 					UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 					PlayPC->PossessingPawn(Pawn);
 					SendWarriorFromCode(PC);
+					PlayPC->BeginPlayerController();
 				}
 			}	// 왕인지
 			else if(SpawnKing) {
@@ -397,6 +402,8 @@ void AC_PlayGM::RealStartGame_Implementation() {
 				// 빙의
 				UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 				PlayPC->PossessingPawn(SpawnKing);
+				SendKingFromCode(PC);
+				PlayPC->BeginPlayerController();
 			}
 			yes++;
 		}
@@ -404,6 +411,8 @@ void AC_PlayGM::RealStartGame_Implementation() {
 
 	// 초 증가 타이머함수 실행.
 	GetWorldTimerManager().SetTimer(GameTimeHandle, this, &AC_PlayGM::GameTime, WorldTime, true);
+	// 감소될 지역을 알려주는 타이머 실행.
+	GetWorldTimerManager().SetTimer(WarningTimeHandle, this, &AC_PlayGM::PreBurning, WarningTime, true);
 }
 
 TArray<int> AC_PlayGM::SetSpawnLocation() {
@@ -447,9 +456,9 @@ TArray<int> AC_PlayGM::SetSpawnLocation() {
 
 void AC_PlayGM::PreLogin(const FString & Options, const FString & Address, const FUniqueNetIdRepl & UniqueId, FString & ErrorMessage)
 {
-	// Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
+	Super::PreLogin(Options, Address, UniqueId, ErrorMessage);
 
-	// ErrorMessage = TEXT("Nop"); // 중도 참여 막기
+	ErrorMessage = TEXT("Nop"); // 중도 참여 막기
 }
 
 void AC_PlayGM::GameTime() {
@@ -462,18 +471,20 @@ void AC_PlayGM::GameTime() {
 }
 
 void AC_PlayGM::PreBurning() {
+	GetWorldTimerManager().ClearTimer(WarningTimeHandle);
 	for (AC_BurningArea* CB : BurningAreas) {
 		if (CB->MyOrder == BurningOrder) {
-			BroadBurningAreaToAll(CB->Tags[BurningOrder]);
+			// Tags 배열의 첫번째는 "BurningArea", 두번째는 현재 BurningOrder의 구역 번호.
+			BroadBurningAreaToAll(CB->Tags[1]);
 			break;
 		}
 	}
-
-	GetWorldTimerManager().SetTimer(BurningTimeHandle, this, &AC_PlayGM::StartBurning, 120.f, false);
+	GetWorldTimerManager().SetTimer(BurningTimeHandle, this, &AC_PlayGM::StartBurning, BurningTime, false);
 }
 
 void AC_PlayGM::StartBurning()
 {
+	GetWorldTimerManager().ClearTimer(BurningTimeHandle);
 	// 배열을 가져온다.
 	for (AC_BurningArea* CB : BurningAreas) {
 		if (CB->MyOrder == BurningOrder) {
@@ -487,7 +498,6 @@ void AC_PlayGM::StartBurning()
 	for (AC_BurningArea* CB : BurningAreas) {
 		CB->MoreStrog();
 	}
-
-	GetWorldTimerManager().ClearTimer(BurningTimeHandle);
 	BurningOrder++;
+	GetWorldTimerManager().SetTimer(WarningTimeHandle, this, &AC_PlayGM::PreBurning, WarningTime,false);
 }

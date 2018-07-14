@@ -70,4 +70,32 @@ bool AC_PlayPC::CopyInfo_Validate(FC_S_PlayerInfo NewInfo) {
 }
 void AC_PlayPC::CopyInfo_Implementation(FC_S_PlayerInfo NewInfo) {
 	MyInfo = NewInfo;
+
+}
+
+bool AC_PlayPC::BeginPlayerController_Validate() {
+	return true;
+}
+void AC_PlayPC::BeginPlayerController_Implementation() {
+	// MyInfo 를 가져와서 확인하는게 오류가 있다면.
+	// 현재 빙의된 캐릭터가 (GetControlleredPawn 사용) Warrior 인지 King 인지 확인.
+	if (Cast<AC_WarriorCharacter>(MyInfo.SelectCharacter.GameCharacter)) {
+		SendWarriorFromCode();
+	}
+	else if (Cast<AC_KingPawn>(MyInfo.SelectCharacter.GameCharacter)) {
+		SendKingFromCode();
+	}
+}
+
+bool AC_PlayPC::CheckPawn() {
+	if (MyInfo.SelectCharacter.GameCharacter->IsValidLowLevel()) {
+		if (Cast<AC_KingPawn>(MyInfo.SelectCharacter.GameCharacter)) {
+			return true;
+		}
+		else if (Cast<AC_WarriorCharacter>(MyInfo.SelectCharacter.GameCharacter)) {
+			return false;
+		}
+	}
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, FString::Printf(TEXT("MyInfo.SelectCharacter.GameCharacter Fail!")));
+	return false;
 }

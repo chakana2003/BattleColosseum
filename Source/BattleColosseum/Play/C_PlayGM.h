@@ -37,8 +37,29 @@ public: // 변수
 	FTimerHandle CountdownTimeHandle;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FTimerHandle GameTimeHandle;
+	
+	// NULL 캐릭터 상태인 시간.
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = PipeLine)
+	float NullCharTime;
+	// Lobby캐릭터를 생성하고 나서의 시간.
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = PipeLine)
+	float LobbyCharTime;
+
+	// 불타는 시간까지 타임.
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = PipeLine)
+	float BurningTime;
+	// 다음 불타기 알람을 주기까지의 시간.
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = PipeLine)
+	float WarningTime;
+
+	// 불타는 타임 이벤트 핸들러
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	FTimerHandle BurningTimeHandle;
+	// 다음 불타기를 기다리는 타임 이벤트 핸들러
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	FTimerHandle WarningTimeHandle;
+
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated)
 	TArray<AC_BurningArea*> BurningAreas;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
@@ -82,8 +103,12 @@ public: // 함수
 	UFUNCTION(BlueprintImplementableEvent)
 	void SendCurrentPC(APlayerController* Player);
 
+	// 게임 시작 시 워리어 초기설정할 블루프린트를 호출할 함수.
 	UFUNCTION(BlueprintImplementableEvent)
 	void SendWarriorFromCode(APlayerController* Player);
+	// 게임 시작 시 킹 초기설정할 블루프린트를 호출할 함수.
+	UFUNCTION(BlueprintImplementableEvent)
+	void SendKingFromCode(APlayerController* Player);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void BeginStartTimer();					// 카운트다운 시작
@@ -109,4 +134,7 @@ public: // 함수
 
 	UFUNCTION(BlueprintCallable)
 	void CreateBurningArray();
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void LaunchFireArrow();
 };

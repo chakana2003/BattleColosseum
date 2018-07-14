@@ -50,4 +50,6 @@ public: // ÇÔ¼ö
 	UFUNCTION()
 	void TimeIncrese();
 
+	virtual void BeginPlay() override;
+
 };
