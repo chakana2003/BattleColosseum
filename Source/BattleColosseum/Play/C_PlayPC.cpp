@@ -87,7 +87,7 @@ void AC_PlayPC::BeginPlayerController_Implementation() {
 	}
 }
 
-bool AC_PlayPC::CheckPawn() {
+bool AC_PlayPC::IsKing() {
 	if (MyInfo.SelectCharacter.GameCharacter->IsValidLowLevel()) {
 		if (Cast<AC_KingPawn>(MyInfo.SelectCharacter.GameCharacter)) {
 			return true;
