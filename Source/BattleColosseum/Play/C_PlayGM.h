@@ -71,6 +71,10 @@ public: // 변수
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = PipeLine)
 	bool JoinPossible;
 
+	// 왕이 정한 제한될 구역을 저장하는 변수.
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TArray<int> KingOrder;
+
 public: // 함수
 
 	AC_PlayGM();
