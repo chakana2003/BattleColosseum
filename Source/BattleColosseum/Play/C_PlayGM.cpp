@@ -370,7 +370,7 @@ void AC_PlayGM::RealStartGame_Implementation() {
 		AC_PlayPC* PlayPC = Cast<AC_PlayPC>(PC);
 		if (PlayPC) {
 			// 먼저 스폰한 다음에.
-			AActor* SpawnedAct = GetWorld()->SpawnActor<APawn>(PlayPC->MyInfo.SelectCharacter.GameCharacter, SpawnBox->GetActorTransform());
+			APawn* SpawnedAct = GetWorld()->SpawnActor<APawn>(PlayPC->MyInfo.SelectCharacter.GameCharacter, SpawnBox->GetActorTransform());
 			AC_WarriorCharacter* SpawnWarrior = Cast<AC_WarriorCharacter>(SpawnedAct);
 			AC_KingPawn* SpawnKing = Cast<AC_KingPawn>(SpawnedAct);
 			
@@ -389,14 +389,12 @@ void AC_PlayGM::RealStartGame_Implementation() {
 				// 새로운 위치에 플레이어가 선택한 용병 Pawn 스폰
 				SpawnWarrior->SetActorTransform(SpawnTransform);
 
-				APawn* Pawn = Cast<APawn>(SpawnedAct);
-				if (Pawn) {
 				// 빙의
-					UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
-					PlayPC->PossessingPawn(Pawn);
-					SendWarriorFromCode(PC);
-					PlayPC->BeginPlayerController();
-				}
+				UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+				PlayPC->PossessingPawn(SpawnWarrior);
+				SendWarriorFromCode(PC);
+				PlayPC->BeginPlayerController();
+			
 			}	// 왕인지
 			else if(SpawnKing) {
 				// 가운데 왕 Pawn 스폰
@@ -475,33 +473,64 @@ void AC_PlayGM::GameTime() {
 }
 
 void AC_PlayGM::PreBurning() {
+	// Handler를 두번 클리어를 하게 되는데 이게 괜찮을까? 만약 오류 시 Handler 가 활성화상태인지 확인하는 로직 필요. 재귀함수때문.
 	GetWorldTimerManager().ClearTimer(WarningTimeHandle);
-	for (AC_BurningArea* CB : BurningAreas) {
-		if (CB->MyOrder == BurningOrder) {
+
+	if (KingOrder[0]) {
+		BroadBurningAreaToAll(FName(*FString::FromInt(KingOrder[0])));
+	}
+	else {
+		for (AC_BurningArea* CB : BurningAreas) {
 			// Tags 배열의 첫번째는 "BurningArea", 두번째는 현재 BurningOrder의 구역 번호.
-			BroadBurningAreaToAll(CB->Tags[1]);
-			break;
+			if (CB->MyOrder == BurningOrder) {
+				// 만약 이미 활성화 상태라면
+				if (CB->bPainCausing) {
+					BurningOrder++;		// 이미 짜여진 랜덤배열의 순번을 증가.
+					PreBurning();		// 재귀함수를 써도 될까.
+					return;
+				}
+				else {
+					BroadBurningAreaToAll(CB->Tags[1]);
+					break;
+				}
+			}
 		}
 	}
+
 	GetWorldTimerManager().SetTimer(BurningTimeHandle, this, &AC_PlayGM::StartBurning, BurningTime, false);
 }
 
 void AC_PlayGM::StartBurning()
 {
 	GetWorldTimerManager().ClearTimer(BurningTimeHandle);
-	// 배열을 가져온다.
-	for (AC_BurningArea* CB : BurningAreas) {
-		if (CB->MyOrder == BurningOrder) {
-			CB->SetActivate();
-			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%s was Closed"), *(CB->Tags[1].ToString())));
-			break;
-		}
-	}
 
-	// 이미 활성화 되어있는 BrunignArea 를 더 강하게 만든다.
-	for (AC_BurningArea* CB : BurningAreas) {
-		CB->MoreStrog();
+	// 왕이 고른게 있는지 체크
+	if (KingOrder[0]) {
+		for (AC_BurningArea* CB : BurningAreas) {
+			if (CB->Tags[1].ToString() == FString::FromInt(KingOrder[0])) {
+				CB->SetActivate();
+				KingOrder.Pop();
+				break;
+			}
+		}
+	}	// 왕이 고른게 없다면 랜덤으로 돌린다.
+	else {
+		// 배열을 가져온다.
+		for (AC_BurningArea* CB : BurningAreas) {
+			if (CB->MyOrder == BurningOrder) {
+				CB->SetActivate();
+				GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%s was Closed"), *(CB->Tags[1].ToString())));
+				break;
+
+			}
+		}
+
+		// 이미 활성화 되어있는 BrunignArea 를 더 강하게 만든다.
+		for (AC_BurningArea* CB : BurningAreas) {
+			CB->MoreStrog();
+		}
+		BurningOrder++;
 	}
-	BurningOrder++;
+	
 	GetWorldTimerManager().SetTimer(WarningTimeHandle, this, &AC_PlayGM::PreBurning, WarningTime,false);
 }
