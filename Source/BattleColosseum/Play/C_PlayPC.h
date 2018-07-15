@@ -52,5 +52,5 @@ public: // ÇÔ¼ö
 
 	// if PC is King, return true, or not false. or fail, write log.
 	UFUNCTION(BlueprintCallable)
-	bool CheckPawn();
+	bool IsKing();
 };

@@ -67,6 +67,10 @@ public: // 변수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float WorldTime;
 
+	// 중도참여 가능한지 안한지 제어하는 변수.
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = PipeLine)
+	bool JoinPossible;
+
 public: // 함수
 
 	AC_PlayGM();
