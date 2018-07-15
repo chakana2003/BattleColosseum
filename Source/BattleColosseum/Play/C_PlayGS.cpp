@@ -24,6 +24,16 @@ AC_PlayGS::AC_PlayGS() {
 	WaitForDeleteArea = false;
 }
 
+void AC_PlayGS::BeginPlay() {
+	// GM 에서 설정한 초기 게임 시작 타임을 설정하기 위함.
+	if (HasAuthority()) {
+		AC_PlayGM* GM = Cast<AC_PlayGM>(UGameplayStatics::GetGameMode(GetWorld()));
+		if (GM) {
+			LeftStartTime = GM->NullCharTime;
+		}
+	}
+}
+
 void AC_PlayGS::Tick(float DeltaSeconds){
 	GetServerWorldTimeSeconds();
 
@@ -88,25 +98,10 @@ void AC_PlayGS::TimeIncrese() {
 		if (sec >= 60) {
 			sec = 0;
 			min++;
-
-			// 지역 제한 확인 - 분이 바뀔때 체크해야하기때문에 이곳에 설정.
-			if (HasAuthority()) {
-				AC_PlayGM* GM = Cast<AC_PlayGM>(UGameplayStatics::GetGameMode(GetWorld()));
-				if (GM) {
-					// 0분째가 아닐 때, 4분마다 지역 제한.
-					if (min != 0 && min % 6 == 0) {
-						GM->PreBurning();
-					}
-				}
-			}
 			if (min >= 60) {
 				min = 0;
 				hour++;
 			}
 		}
 	}
-
-
-	
-	
 }
