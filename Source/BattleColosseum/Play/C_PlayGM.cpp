@@ -476,7 +476,7 @@ void AC_PlayGM::PreBurning() {
 	// Handler를 두번 클리어를 하게 되는데 이게 괜찮을까? 만약 오류 시 Handler 가 활성화상태인지 확인하는 로직 필요. 재귀함수때문.
 	GetWorldTimerManager().ClearTimer(WarningTimeHandle);
 
-	if (KingOrder.IsValidIndex(0)) {
+	if (KingOrder[0]) {
 		BroadBurningAreaToAll(FName(*FString::FromInt(KingOrder[0])));
 	}
 	else {
@@ -505,7 +505,7 @@ void AC_PlayGM::StartBurning()
 	GetWorldTimerManager().ClearTimer(BurningTimeHandle);
 
 	// 왕이 고른게 있는지 체크
-	if (KingOrder.IsValidIndex(0)) {
+	if (KingOrder[0]) {
 		for (AC_BurningArea* CB : BurningAreas) {
 			if (CB->Tags[1].ToString() == FString::FromInt(KingOrder[0])) {
 				CB->SetActivate();
