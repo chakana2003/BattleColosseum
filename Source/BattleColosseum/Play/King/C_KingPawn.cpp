@@ -93,7 +93,7 @@ void AC_KingPawn::MoveRight(float Value)
 }
 void AC_KingPawn::ZoomIn(float Value)
 {
-	ZoomVector = (FVector(GetActorForwardVector().X, GetActorForwardVector().Y, -0.5)*Value * 2000);
+	ZoomVector = (FVector(GetActorForwardVector().X, GetActorForwardVector().Y, -0.5)*Value * 1200);
 	AddActorWorldOffset(ZoomVector);
 }
 
