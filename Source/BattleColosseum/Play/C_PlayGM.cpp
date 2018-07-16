@@ -390,7 +390,7 @@ void AC_PlayGM::RealStartGame_Implementation() {
 				SpawnWarrior->SetActorTransform(SpawnTransform);
 
 				// 빙의
-				UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+				UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES Worrior Do It!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 				PlayPC->PossessingPawn(SpawnWarrior);
 				SendWarriorFromCode(PC);
 				PlayPC->BeginPlayerController();
@@ -400,7 +400,7 @@ void AC_PlayGM::RealStartGame_Implementation() {
 				// 가운데 왕 Pawn 스폰
 
 				// 빙의
-				UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
+				UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES King Do It!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 				PlayPC->PossessingPawn(SpawnKing);
 				SendKingFromCode(PC);
 				PlayPC->BeginPlayerController();
@@ -476,8 +476,8 @@ void AC_PlayGM::PreBurning() {
 	// Handler를 두번 클리어를 하게 되는데 이게 괜찮을까? 만약 오류 시 Handler 가 활성화상태인지 확인하는 로직 필요. 재귀함수때문.
 	GetWorldTimerManager().ClearTimer(WarningTimeHandle);
 
-	if (KingOrder[0]) {
-		BroadBurningAreaToAll(FName(*FString::FromInt(KingOrder[0])));
+	if (KingOrder.IsValidIndex(0)) {
+		BroadBurningAreaToAll(FName(*FString::FromInt(KingOrder[0]+1)));
 	}
 	else {
 		for (AC_BurningArea* CB : BurningAreas) {
@@ -505,9 +505,9 @@ void AC_PlayGM::StartBurning()
 	GetWorldTimerManager().ClearTimer(BurningTimeHandle);
 
 	// 왕이 고른게 있는지 체크
-	if (KingOrder[0]) {
+	if (KingOrder.IsValidIndex(0)) {
 		for (AC_BurningArea* CB : BurningAreas) {
-			if (CB->Tags[1].ToString() == FString::FromInt(KingOrder[0])) {
+			if (CB->Tags[1].ToString() == FString::FromInt(KingOrder[0]+1)) {
 				CB->SetActivate();
 				KingOrder.Pop();
 				break;
@@ -521,7 +521,6 @@ void AC_PlayGM::StartBurning()
 				CB->SetActivate();
 				GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%s was Closed"), *(CB->Tags[1].ToString())));
 				break;
-
 			}
 		}
 
