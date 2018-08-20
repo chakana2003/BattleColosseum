@@ -70,25 +70,25 @@ void AC_BurningArea::MoreStrog_Implementation() {
 		switch (Strong)
 		{
 		case 1:
-			DamagePerSec = 2.f;
+			DamagePerSec = 0.2f;
 			break;
 		case 2:
-			DamagePerSec = 5.f;
+			DamagePerSec = 0.5f;
 			break;
 		case 3:
-			DamagePerSec = 10.f;
+			DamagePerSec = 1.f;
 			break;
 		case 4:
-			DamagePerSec = 20.f;
+			DamagePerSec = 1.8f;
 			break;
 		case 5:
-			DamagePerSec = 30.f;
+			DamagePerSec = 2.5f;
 			break;
 		case 6:
-			DamagePerSec = 40.f;
+			DamagePerSec = 3.f;
 			break;
 		case 7:
-			DamagePerSec = 50.f;
+			DamagePerSec = 5.f;
 			break;
 		default:
 			break;

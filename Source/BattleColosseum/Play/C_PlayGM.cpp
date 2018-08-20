@@ -509,7 +509,7 @@ void AC_PlayGM::StartBurning()
 		for (AC_BurningArea* CB : BurningAreas) {
 			if (CB->Tags[1].ToString() == FString::FromInt(KingOrder[0]+1)) {
 				CB->SetActivate();
-				KingOrder.Pop();
+				KingOrder.Remove(0);
 				break;
 			}
 		}
