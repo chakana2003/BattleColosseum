@@ -8,7 +8,7 @@
 
 AC_BurningArea::AC_BurningArea() {
 	bReplicates = true;
-	bReplicateMovement = true;
+	SetReplicateMovement(true);
 
 	DamagePerSec = 0.f;
 	// Pain Causing Volume 에 내장되어있는 데미지주는 Bool 값.

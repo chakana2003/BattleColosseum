@@ -21,8 +21,8 @@ AC_Warrior::AC_Warrior()
 	springArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("W_SprintArm"));
 
 	//컴포넌트 초기화
-	GetMesh()->RelativeLocation = FVector(0.f, 0.f, -90.f);					// 캐릭터 위치 초기화
-	GetMesh()->RelativeRotation = FRotator(0.f, -90.f, 0.f);					// 캐릭터 방향 초기화
+	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));					// 캐릭터 위치 초기화
+	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));					// 캐릭터 방향 초기화
 	springArm->AttachToComponent((USceneComponent*)GetCapsuleComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	cam->AttachToComponent(springArm, FAttachmentTransformRules::KeepRelativeTransform);
 	this->bUseControllerRotationPitch = false;				// 플레이어가 위아래로 돌아가지 않도록

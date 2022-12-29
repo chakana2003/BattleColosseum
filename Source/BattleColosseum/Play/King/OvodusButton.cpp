@@ -30,7 +30,7 @@ FReply SOvodusButton::OnMouseMove(const FGeometry& MyGeometry, const FPointerEve
 }
 FCursorReply SOvodusButton::OnCursorQuery(const FGeometry& MyGeometry, const FPointerEvent& CursorEvent) const {
 	if (!bIsHovered) return FCursorReply::Unhandled();
-	TOptional<EMouseCursor::Type> TheCursor = Cursor.Get();
+	TOptional<EMouseCursor::Type> TheCursor = GetCursor();
 	return (TheCursor.IsSet()) ? FCursorReply::Cursor(TheCursor.GetValue()) : FCursorReply::Unhandled();
 }
 #pragma endregion

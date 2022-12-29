@@ -54,11 +54,11 @@ AC_NullCharacter::AC_NullCharacter() {
 	SpringArm->bEnableCameraLag = true;
 	SpringArm->bEnableCameraRotationLag = true;
 	SpringArm->bDoCollisionTest = true;
-	SpringArm->bAbsoluteRotation = true;
+	SpringArm->SetUsingAbsoluteRotation(true);
 	SpringArm->ProbeSize = 0.1f;
 	SpringArm->CameraLagSpeed = 20.f;
 	SpringArm->CameraRotationLagSpeed = 20.f;
-	SpringArm->RelativeRotation = FRotator(-30.f, 0.f, 0.f);
+	SpringArm->SetRelativeRotation(FRotator(-30.f, 0.f, 0.f));
 }
 
 void AC_NullCharacter::SetupPlayerInputComponent(UInputComponent * PlayerInputComponent)
