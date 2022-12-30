@@ -117,10 +117,12 @@ void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerControll
 	
 	// 이전에 썼던 컨트롤러를 캐스트
 	AC_LobbyPC* LobbyPC = Cast<AC_LobbyPC>(OldPC);
-	if (LobbyPC) {
+	if (LobbyPC)
+	{
 		// 현재 쓰고있는 컨트롤러를 캐스트
 		AC_PlayPC* PlayPC = Cast<AC_PlayPC>(NewPC);
-		if (PlayPC) {
+		if (PlayPC)
+		{
 			// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2. MyInfo Coppy"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 			// Info 옮김.
 			PlayPC->MyInfo = LobbyPC->MyInfo;		// 원래코드. 서버에서도 바꿔줘야하니까 해야하지않을까.
@@ -132,11 +134,13 @@ void AC_PlayGM::SwapPlayerControllers(APlayerController * OldPC, APlayerControll
 			SendCurrentPC(NewPC);		// PC들의 위젯을 생성하기 위해 생성한 블루프린트 이벤트.
 			// PlayPC->PassCharacterToServer(PlayPC->MyInfo);  // 첨부터 스폰하면 안됨..
 		}
-		else {
+		else
+		{
 			// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2-1. NewPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 		}
 	}
-	else {
+	else
+	{
 		// UKismetSystemLibrary::PrintString(GetWorld(), TEXT("2-2. OldPC Cast Error"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 	}
 }
@@ -205,11 +209,13 @@ void AC_PlayGM::CountdownTimer()
 	
 }
 
-void AC_PlayGM::YesSpawn()
+void AC_PlayGM::SpawnLobbyCharacter()
 {
-	for (APlayerController* PC : ConnectedPlayerControllers) {
+	for (APlayerController* PC : ConnectedPlayerControllers)
+	{
 		AC_PlayPC* PlayPC = Cast<AC_PlayPC>(PC);
-		if (PlayPC) {
+		if (PlayPC)
+		{
 			if (PlayPC->GetPawn())
 			{
 				// 이미 빙의되어있는 Panw 을 제거.
@@ -232,7 +238,8 @@ void AC_PlayGM::YesSpawn()
 			
 			// 스폰된 액터 빙의.
 			APawn* Pawn = Cast<APawn>(SpawnedAct);
-			if (Pawn) {
+			if (Pawn)
+			{
 				// KismetSystemLibrary::PrintString(GetWorld(), TEXT("4. YES DOIT!!!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 				PlayPC->PossessingPawn(Pawn);
 			}
@@ -301,19 +308,24 @@ bool AC_PlayGM::SpawnCharacter_WaitTime_Validate(APlayerController* PC, TSubclas
 void AC_PlayGM::SpawnCharacter_WaitTime_Implementation(APlayerController* PC, TSubclassOf<APawn> Character) {
 	UKismetSystemLibrary::PrintString(GetWorld(), TEXT("SpawnCharacter_WaitTime Call"), true, true, FLinearColor(1.f, 1.f, 1.f, 1.f), 10.f);
 	AC_PlayPC* PlayPC = Cast<AC_PlayPC>(PC);
-	if (PlayPC) {
-		if (PlayPC->GetPawn()) {
+	if (PlayPC)
+	{
+		if (PlayPC->GetPawn())
+		{
 			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%s is Possess Pawn Name of PlayPC - 10"), *(PC->GetPawn()->GetName())));
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4. Controlled Pawn Destroy Done!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 			PlayPC->GetPawn()->Destroy();
 		}
-		else {
+		else
+		{
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("4-1. Not exist Controlled Pawn"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 		}
-		if (PlayPC->GetPawn()) {
+		if (PlayPC->GetPawn())
+		{
 			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%s is Possess Pawn Name of PlayPC - 10"), *(PC->GetPawn()->GetName())));
 		}
-		if (SpawnBox) {
+		if (SpawnBox)
+		{
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("5. NewPawn Spawned!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 			FVector RandPos = UKismetMathLibrary::RandomPointInBoundingBox(SpawnBox->GetActorLocation(), SpawnBox->GetComponentsBoundingBox().GetExtent());
 			float Rando = UKismetMathLibrary::RandomFloatInRange(0.f, 360.f);
@@ -325,10 +337,12 @@ void AC_PlayGM::SpawnCharacter_WaitTime_Implementation(APlayerController* PC, TS
 			SpawnTransform.SetScale3D(FVector(1.f));
 
 			AActor* SpawnedAct = UGameplayStatics::BeginDeferredActorSpawnFromClass(GetWorld(), Character, SpawnTransform, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-			if (SpawnedAct) {
+			if (SpawnedAct)
+			{
 				UKismetSystemLibrary::PrintString(GetWorld(), TEXT("5. SpawnedAct Cast To APawn!"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 				APawn* Pawn = Cast<APawn>(SpawnedAct);
-				if (Pawn) {
+				if (Pawn)
+				{
 					UKismetSystemLibrary::PrintString(GetWorld(), TEXT("6. Possess Done"), true, true, FLinearColor(0.3f, 1.f, 0.3f, 1.f), 10.f);
 					PlayPC->PossessingPawn(Pawn);
 					GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%s is Possess Pawn Name of PlayPC - 1"), *(PC->GetPawn()->GetName())));
@@ -338,12 +352,14 @@ void AC_PlayGM::SpawnCharacter_WaitTime_Implementation(APlayerController* PC, TS
 					UKismetSystemLibrary::PrintString(GetWorld(), TEXT("6-1. Possess Error Because Pawn does not exist(not spawn)"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 				}
 			}
-			else {
+			else
+			{
 				UKismetSystemLibrary::PrintString(GetWorld(), TEXT("5-2. SpawnedAct is Invalid"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 			}
 			GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("%s is Possess Pawn Name of PlayPC - 2"), *(PC->GetPawn()->GetName())));
 		}
-		else {
+		else
+		{
 			UKismetSystemLibrary::PrintString(GetWorld(), TEXT("5-1. Pawn does not Spawn(Because SpawnBox not Exist"), true, true, FLinearColor(1.f, 0.1f, 0.1f, 1.f), 10.f);
 		}
 	}

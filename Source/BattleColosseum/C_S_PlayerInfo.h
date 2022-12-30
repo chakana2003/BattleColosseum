@@ -7,7 +7,8 @@
 #include "C_S_PlayerInfo.generated.h"
 
 USTRUCT(BlueprintType)
-struct FC_S_Characters {
+struct FC_S_Characters
+{
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -22,7 +23,8 @@ struct FC_S_Characters {
 
 
 USTRUCT(BlueprintType)
-struct FC_S_PlayerInfo {
+struct FC_S_PlayerInfo
+{
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

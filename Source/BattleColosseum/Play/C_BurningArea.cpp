@@ -32,19 +32,22 @@ void AC_BurningArea::BeginPlay()
 	GetWorldTimerManager().SetTimer(CheckTimeHandler, this, &AC_BurningArea::CheckRaise, 0.1f,true);
 }
 
-bool AC_BurningArea::CheckRaise_Validate() {
+bool AC_BurningArea::CheckRaise_Validate()
+{
 	return true;
 }
 void AC_BurningArea::CheckRaise_Implementation()
 {
 	// bPainCausing 이 true 가 되거나 MoveComplete 가 true 가 아닐때(!)
-	if (bPainCausing && !MoveComplete) {
+	if (bPainCausing && !MoveComplete)
+	{
 		SetActorLocation(GetActorLocation() + FVector(0.f, 0.f, MoveingRate));
 
 		// 불이 밑에서 올라오기때문에 >= 를 씀.
-		if (GetActorLocation().Z >= 17840.f) {
+		if (GetActorLocation().Z >= StartDamageZ)
+		{
 			FVector NewVector = GetActorLocation();
-			NewVector.Z = 17840.f;
+			NewVector.Z = StartDamageZ;
 			SetActorLocation(NewVector);
 			MoveComplete = true;
 		}

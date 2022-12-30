@@ -101,7 +101,7 @@ public: // 함수
 	void CountdownTimer();
 
 	UFUNCTION(BlueprintCallable)
-	void YesSpawn();		// 로비 캐릭터 생성 함수.
+	void SpawnLobbyCharacter();		// 로비 캐릭터 생성 함수.
 
 	UFUNCTION(Server, reliable, WithValidation)
 	void RealStartGame();	// 실제 게임캐릭터 생성 함수. 

@@ -23,9 +23,6 @@ public: // 변수
 	UC_SaveGame* SaveGameRef;
 
 public: // 함수
-
 	virtual void BeginPlay() override;
-	
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
-	
 };

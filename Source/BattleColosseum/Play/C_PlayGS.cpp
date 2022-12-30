@@ -75,7 +75,7 @@ void AC_PlayGS::OnRep_LeftTime()
 			if (LeftStartTime < 0.f) {
 				if(!PreStart)			// 맨 처음 캐릭터 스폰할 때
 				{
-					GM->YesSpawn();
+					GM->SpawnLobbyCharacter();
 					PreStart = true;
 					GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, FString::Printf(TEXT("PreStart Turn True!")));
 				}

@@ -19,6 +19,4 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void MoveWorld(FString LevelName);
-	
-	
 };

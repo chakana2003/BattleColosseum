@@ -27,6 +27,9 @@ public:		// 변수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = FromCode)
 	float MoveingRate = 100.f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = FromCode)
+	float StartDamageZ = 17840.f;
+
 	FTimerHandle CheckTimeHandler;
 
 public:		// 함수
